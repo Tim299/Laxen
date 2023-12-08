@@ -25,6 +25,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import * as colors from "./components/modules/colors/colors";
+
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
