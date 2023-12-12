@@ -25,53 +25,98 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import * as colors from "./components/modules/colors/colors";
+import { styles } from "./App_stylesheet";
+import HomeScreen from "./components/pages/home/home";
+import GroupsScreen from "./components/pages/groups/groups";
+import SettingsScreen from "./components/pages/settings/settings";
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+function ContactsScreen() {
+  return(
+    <View style={styles.contactsViewContainer}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerFont}>Kontakter</Text>
+      </View>
+      <View>
+        <Text>Contacts</Text>
+      </View>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+
+const tabs = createMaterialTopTabNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+
+
+      <tabs.Navigator
+       tabBarPosition='bottom'
+       screenOptions={{
+        tabBarStyle: styles.tabs,
+        tabBarIndicatorStyle: styles.tabsIndicator,
+        tabBarAndroidRipple: {color: colors.white}
+       }}
+      >
+        <tabs.Screen 
+          name="home" 
+          component={HomeScreen}
+          options={{
+            tabBarIcon:({ focused }) => (
+              <Icon name="home" color={ focused ? colors.darkblue : colors.grey} 
+              size={ focused ? 24 : 24}/>
+            ),
+            tabBarShowIcon: true,
+            tabBarShowLabel: false,
+            title: "HOME"
+          }}
+        />
+
+
+        <tabs.Screen name="groups" component={GroupsScreen}
+          options={{
+            tabBarIcon:({ focused }) => (
+              <Icon name="comments" color={ focused ? colors.darkblue : colors.grey} 
+              size={ focused ? 24 : 24}/>
+            ),
+            tabBarShowIcon: true,
+            tabBarShowLabel: false,
+          }}
+        />
+
+
+        <tabs.Screen name="contacts" component={ContactsScreen}
+          options={{
+            tabBarIcon:({ focused }) => (
+              <Icon name="user" color={ focused ? colors.darkblue : colors.grey} 
+              size={ focused ? 24 : 24}/>
+            ),
+            tabBarShowIcon: true,
+            tabBarShowLabel: false,
+          }}
+        />
+
+
+        <tabs.Screen name="settings" component={SettingsScreen}
+          options={{
+            tabBarIcon:({ focused }) => (
+              <Icon name="gear" color={ focused ? colors.darkblue : colors.grey} 
+              size={ focused ? 24 : 24}/>
+            ),
+            tabBarShowIcon: true,
+            tabBarShowLabel: false,
+          }}
+        />
+      </tabs.Navigator>
+    </NavigationContainer>
+  );
+}
 
 export default App;
