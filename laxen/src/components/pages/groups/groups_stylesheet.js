@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
   headerFont: {
     width: 'fit-content',
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     fontFamily: 'poppins',
     fontSize: 32,
     fontWeight: 'bold',

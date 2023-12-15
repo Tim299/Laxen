@@ -14,9 +14,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from '../../modules/colors/colors';
 
 import {useNavigation} from '@react-navigation/native';
-import HomeScreen from '../home/home';
 
 // import GroupCard from '../../modules/group/group';
+import GroupCards from '../../modules/group/groupcards';
 
 function GroupsScreen() {
   const navigation = useNavigation();
@@ -34,12 +34,12 @@ function GroupsScreen() {
         <Icon
           name="fish-outline"
           size={30}
-          color={colors.grey}
+          color={colors.accent}
           onPress={goToAnotherScreen}
         />
       </View>
       <View>
-        <Text>Groups</Text>
+        <GroupCards></GroupCards>
       </View>
     </View>
   );
