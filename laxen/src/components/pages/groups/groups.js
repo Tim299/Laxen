@@ -34,7 +34,7 @@ function GroupsScreen() {
         <Icon
           name="fish-outline"
           size={30}
-          color={colors.accent}
+          color={colors.black}
           onPress={goToAnotherScreen}
         />
       </View>
