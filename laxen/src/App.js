@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -24,6 +24,10 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {
+  FIREBASE_AUTH,
+  FIREBASE_APP,
+} from './components/pages/login/FirebaseConfig';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -35,6 +39,7 @@ import HomeScreen from './components/pages/home/home';
 import GroupsScreen from './components/pages/groups/groups';
 import SettingsScreen from './components/pages/settings/settings';
 import Login from './components/pages/login/login';
+import {onAuthStateChanged} from 'firebase/auth';
 
 function ContactsScreen() {
   return (
@@ -52,91 +57,92 @@ function ContactsScreen() {
 const tabs = createMaterialTopTabNavigator();
 
 function App() {
+  const [user, setUser] = useState(null);
 
-  const [authenticated, setAuthenticated] = useState(false); // Manage authentication status
-
-
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, user => {
+      setUser(user);
+    });
+  }, []);
 
   return (
     <NavigationContainer>
-     {authenticated ? (
-      <tabs.Navigator
-        tabBarPosition="bottom"
-        screenOptions={{
-          tabBarStyle: styles.tabs,
-          tabBarIndicatorStyle: styles.tabsIndicator,
-          tabBarAndroidRipple: {color: colors.white},
-        }}>
-        <tabs.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                name="home"
-                color={focused ? colors.darkblue : colors.grey}
-                size={focused ? 24 : 24}
-              />
-            ),
-            tabBarShowIcon: true,
-            tabBarShowLabel: false,
-            title: 'HomeScreen',
-          }}
-        />
+      {user ? (
+        <tabs.Navigator
+          tabBarPosition="bottom"
+          screenOptions={{
+            tabBarStyle: styles.tabs,
+            tabBarIndicatorStyle: styles.tabsIndicator,
+            tabBarAndroidRipple: {color: colors.white},
+          }}>
+          <tabs.Screen
+            name="HomeScreen"
+            component={HomeScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name="home"
+                  color={focused ? colors.darkblue : colors.grey}
+                  size={focused ? 24 : 24}
+                />
+              ),
+              tabBarShowIcon: true,
+              tabBarShowLabel: false,
+              title: 'HomeScreen',
+            }}
+          />
 
-        <tabs.Screen
-          name="groups"
-          component={GroupsScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                name="comments"
-                color={focused ? colors.darkblue : colors.grey}
-                size={focused ? 24 : 24}
-              />
-            ),
-            tabBarShowIcon: true,
-            tabBarShowLabel: false,
-          }}
-        />
+          <tabs.Screen
+            name="groups"
+            component={GroupsScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name="comments"
+                  color={focused ? colors.darkblue : colors.grey}
+                  size={focused ? 24 : 24}
+                />
+              ),
+              tabBarShowIcon: true,
+              tabBarShowLabel: false,
+            }}
+          />
 
-        <tabs.Screen
-          name="contacts"
-          component={ContactsScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                name="user"
-                color={focused ? colors.darkblue : colors.grey}
-                size={focused ? 24 : 24}
-              />
-            ),
-            tabBarShowIcon: true,
-            tabBarShowLabel: false,
-          }}
-        />
+          <tabs.Screen
+            name="contacts"
+            component={ContactsScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name="user"
+                  color={focused ? colors.darkblue : colors.grey}
+                  size={focused ? 24 : 24}
+                />
+              ),
+              tabBarShowIcon: true,
+              tabBarShowLabel: false,
+            }}
+          />
 
-        <tabs.Screen
-          name="settings"
-          component={SettingsScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                name="gear"
-                color={focused ? colors.darkblue : colors.grey}
-                size={focused ? 24 : 24}
-              />
-            ),
-            tabBarShowIcon: true,
-            tabBarShowLabel: false,
-          }}
-        />
-      </tabs.Navigator>
+          <tabs.Screen
+            name="settings"
+            component={SettingsScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name="gear"
+                  color={focused ? colors.darkblue : colors.grey}
+                  size={focused ? 24 : 24}
+                />
+              ),
+              tabBarShowIcon: true,
+              tabBarShowLabel: false,
+            }}
+          />
+        </tabs.Navigator>
       ) : (
         <Login />
       )}
-
-     
     </NavigationContainer>
   );
 }
