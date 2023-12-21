@@ -6,28 +6,9 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {View} from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import {
-  FIREBASE_AUTH,
-  FIREBASE_APP,
-} from './components/pages/login/FirebaseConfig';
+import {FIREBASE_AUTH} from './components/pages/login/FirebaseConfig';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';

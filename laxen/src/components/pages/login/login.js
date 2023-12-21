@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 120,
     marginBottom: 40,
-    transform: [{rotate: '180deg'}], // Rotates the image 45 degrees
+    transform: [{rotate: '180deg'}],
   },
   title: {
     fontSize: 24,
