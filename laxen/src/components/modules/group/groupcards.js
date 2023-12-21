@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -114,8 +115,8 @@ function Member({member}) {
   );
 }
 
-const GroupCard = ({title, amount, deschribtion, members, icon}) => (
-  <View style={styles.mainView}>
+const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
+  <TouchableOpacity style={styles.mainView} onPress={onPress}>
     <View
       style={{
         display: 'flex',
@@ -150,10 +151,16 @@ const GroupCard = ({title, amount, deschribtion, members, icon}) => (
         <Text style={styles.paymentAmount}>{amount} kr</Text>
       </View>
     </View>
-  </View>
+  </TouchableOpacity>
 );
 
 function GroupCards() {
+  const navigation = useNavigation();
+
+  const goToGroup = () => {
+    navigation.navigate('HomeScreen');
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -165,6 +172,7 @@ function GroupCards() {
             deschribtion={item.deschribtion}
             members={item.members}
             icon={item.icon}
+            onPress={() => { navigation.navigate('HomeScreen'); }} // Navigate to the subgroup when clicking it
           />
         )}
         keyExtractor={item => item.id}
