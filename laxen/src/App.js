@@ -6,7 +6,8 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {PropsWithChildren} from 'react';
+import {Text, View} from 'react-native';
 
 import {FIREBASE_AUTH} from './components/pages/login/FirebaseConfig';
 
