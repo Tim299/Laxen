@@ -28,12 +28,15 @@ import {
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import * as colors from './components/modules/colors/colors';
 import {styles} from './App_stylesheet';
 import HomeScreen from './components/pages/home/home';
 import GroupsScreen from './components/pages/groups/groups';
 import SettingsScreen from './components/pages/settings/settings';
+import SubGroup from './components/modules/group/subgroup';
 
 function ContactsScreen() {
   return (
@@ -48,11 +51,36 @@ function ContactsScreen() {
   );
 }
 
+const stack = createStackNavigator();
 const tabs = createMaterialTopTabNavigator();
 
-function App() {
-  return (
+function AppStack() {
+  return(
     <NavigationContainer>
+      <stack.Navigator
+        initialRouteName="app"
+        screenOptions={{
+          headerShown: false,
+        }}
+      > 
+        <stack.Screen
+          name="app"
+          component={App}
+        />
+
+        <stack.Screen
+          name="subgroup"
+          component={SubGroup}
+        />
+
+      </stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+function App({ navigation }) {
+  return (
+    // <NavigationContainer>
       <tabs.Navigator
         tabBarPosition="bottom"
         screenOptions={{
@@ -125,8 +153,8 @@ function App() {
           }}
         />
       </tabs.Navigator>
-    </NavigationContainer>
+    // </NavigationContainer>
   );
 }
 
-export default App;
+export default AppStack;

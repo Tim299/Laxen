@@ -3,9 +3,37 @@ import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import Payment from '../payment/payment'
 
 const styles = StyleSheet.create({
-
+    subgroupViewContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      },
+      headerContainer: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row',
+        backgroundColor: colors.white,
+        height: '8%',
+        width: '100%',
+        paddingLeft: '4%',
+        paddingRight: '4%',
+        borderBottomColor: colors.grey,
+        borderBottomWidth: 1,
+        paddingBottom: '0%',
+        fontFamily: 'poppins',
+      },
+      headerFont: {
+        width: 'fit-content',
+        backgroundColor: colors.white,
+        fontFamily: 'poppins',
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: colors.black,
+      },
 });
 
 const DATA = [
@@ -36,3 +64,33 @@ const DATA = [
       ]
     },
   ];
+
+function SubGroup({ route, navigation }) {
+    const { groupID, title, amount, description, members, payments } = route.params;
+    
+    return (
+        <View style={styles.subgroupViewContainer}>
+            <View style={styles.headerContainer}>
+                <Text h1 style={styles.headerFont}>{title}</Text>
+                <Icon
+                name="close-outline"
+                size={30}
+                color={colors.black}
+                onPress={ () => { navigation.navigate("groups"); }}
+                />
+            </View>
+                <FlatList
+                    data={payments}
+                    renderItem={({item}) => (
+                    <View>
+                        {/* Create the list of payments here */}
+                        <Text>{item.title} {item.amount}kr</Text>
+                    </View>
+                    )}
+                    keyExtractor={item => item.id}
+                />
+        </View>
+      );
+}
+
+export default SubGroup;
