@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -34,6 +34,7 @@ import {styles} from './App_stylesheet';
 import HomeScreen from './components/pages/home/home';
 import GroupsScreen from './components/pages/groups/groups';
 import SettingsScreen from './components/pages/settings/settings';
+import Login from './components/pages/login/login';
 
 function ContactsScreen() {
   return (
@@ -51,8 +52,14 @@ function ContactsScreen() {
 const tabs = createMaterialTopTabNavigator();
 
 function App() {
+
+  const [authenticated, setAuthenticated] = useState(false); // Manage authentication status
+
+
+
   return (
     <NavigationContainer>
+     {authenticated ? (
       <tabs.Navigator
         tabBarPosition="bottom"
         screenOptions={{
@@ -125,6 +132,11 @@ function App() {
           }}
         />
       </tabs.Navigator>
+      ) : (
+        <Login />
+      )}
+
+     
     </NavigationContainer>
   );
 }
