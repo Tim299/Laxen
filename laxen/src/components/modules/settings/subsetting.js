@@ -34,22 +34,15 @@ const DATA = [
     {}
 ];
 
-function subSetting({ route, navigation }) {
-    const { } = route.params;
+function SubSetting({ route }) {
+    const { settingID } = route.params;
 
     return (
         <View>
-            <View style={styles.headerContainer}>
-                <Text h1 style={styles.headerFont}>{title}</Text>
-                <Icon
-                    name="close-outline"
-                    size={30}
-                    color={colors.black}
-                    onPress={() => { navigation.navigate("groups"); }}
-                />
-            </View>
+            <Text>SubSetting Screen</Text>
+            <Text>Setting ID: {settingID}</Text>
         </View>
-    )
-}
+    );
+};
 
-export default subSetting;
+export default SubSetting;

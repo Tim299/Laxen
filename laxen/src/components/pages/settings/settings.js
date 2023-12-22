@@ -17,8 +17,9 @@ import { styles } from './settings_stylesheet';
 import { FIREBASE_AUTH } from '../login/FirebaseConfig';
 
 import { useNavigation } from '@react-navigation/native';
+import { subSetting } from '../../modules/settings/subsetting';
 
-const data = [
+const DATA = [
   {
     id: '1',
     title: 'General Settings',
@@ -67,6 +68,19 @@ function SettingsScreen() {
     navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
   };
 
+  const settingItem = ({item}) => (
+    <ListItem
+      title={item.title}
+      description={item.description}
+      icon={item.icon}
+      onPress={() => {
+        navigation.navigate('SubSetting', {
+          settingID: item.id
+        });
+      }}
+    />
+  );
+
   return (
     <View style={styles.settingsViewContainer}>
       <View style={styles.headerContainer}>
@@ -82,13 +96,9 @@ function SettingsScreen() {
       </View>
       <View style={styles.settingsView}>
         <FlatList
-          data={data}
+          data={DATA}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <ListItem
-            title={item.title}
-            description={item.description}
-            icon={item.icon}
-          />}
+          renderItem={settingItem}
         />
         <Button
           onPress={() => FIREBASE_AUTH.signOut()}
