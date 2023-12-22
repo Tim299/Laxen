@@ -4,6 +4,7 @@ import * as colors from '../../modules/colors/colors';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
+import { SelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const styles = StyleSheet.create({
@@ -24,12 +25,14 @@ const styles = StyleSheet.create({
     color: colors.grey
   },
   input: {
+    height: 50,
     margin: 12,
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 10,
     padding: 10,
     backgroundColor: colors.white,
-    elevation: 10
+    elevation: 10,
+    borderColor: colors.accent,
   },
   createGroupButton: {
     alignItems: 'center',
@@ -49,19 +52,42 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   memberBox: {
+    height: 50,
     margin: 12,
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 10,
     padding: 20,
     backgroundColor: colors.white,
-    elevation: 10
+    elevation: 10,
+    borderColor: colors.accent,
   },
   memberDropdown: {
     backgroundColor: colors.white,
-    marginHorizontal: 12,
-    borderWidth: 1,
+    marginLeft: 20,
+    marginRight: 50,
+    borderWidth: 1.3,
     borderRadius: 10,
-    elevation: 10
+    elevation: 10,
+    borderColor: colors.accent,
+  },
+  categoryBox: {
+    height: 50,
+    margin: 12,
+    borderWidth: 2,
+    borderRadius: 10,
+    padding: 20,
+    backgroundColor: colors.white,
+    elevation: 10,
+    borderColor: colors.accent,
+  },
+  categoryDropdown: {
+    backgroundColor: colors.white,
+    marginLeft: 20,
+    marginRight: 50,
+    borderWidth: 1.3,
+    borderRadius: 10,
+    elevation: 10,
+    borderColor: colors.accent,
   },
 });
 
@@ -70,6 +96,7 @@ function createGroupForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedMember, setSelectedMember] = useState([]);
+  const [selectedIcon, setSelectedIcon] = useState("");
   
   const contacts = [
     // Get contacts from database to display as members to add to group here
@@ -78,6 +105,11 @@ function createGroupForm() {
     // This is sample data
     { key: '1', value: 'Hampus Grimskär'},
     { key: '2', value: 'Ludvig Nilsson'},
+  ]
+
+  const categories = [
+    { key: '1', value: 'Fisk'},
+    { key: '2', value: 'Resor'},
   ]
 
   return(
@@ -100,12 +132,24 @@ function createGroupForm() {
         style={styles.input} 
         onChangeText={input => setDescription(input)}
       />
+
+      <SelectList
+        setSelected={(val) => setSelectedIcon(val)}
+        data={categories}
+        save="value"
+        label="Kategorier"
+        placeholder="Välj kategori"
+        search={false}
+        boxStyles={styles.categoryBox}
+        dropdownStyles={styles.categoryDropdown}
+      />
+
       <MultipleSelectList
         setSelected={(val) => setSelectedMember(val)}
         data={contacts}
         save="value"
         placeholder="Välj Medlemmar"
-        searchPlaceholder="Sök"
+        searchPlaceholder="Sök i kontakter"
         // onSelect={() => alert(selectedMember)}
         label="Medlemmar"
         boxStyles={styles.memberBox}
