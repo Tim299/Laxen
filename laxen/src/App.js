@@ -128,8 +128,8 @@ function App({ navigation }) {
         />
 
         <tabs.Screen
-          name="contacts"
-          component={ContactsScreen}
+          name="createGroup"
+          component={createGroupForm}
           options={{
             tabBarIcon: ({focused}) => (
               <Icon

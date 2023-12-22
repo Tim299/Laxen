@@ -1,9 +1,17 @@
-import { View, Text, TextInput, Button, Pressable} from "react-native";
+import { View, Text, TextInput, Button, TouchableOpacity} from "react-native";
 import {StyleSheet} from 'react-native';
 import * as colors from '../../modules/colors/colors';
 import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import { MultipleSelectList } from 'react-native-dropdown-select-list';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const styles = StyleSheet.create({
+  closeIcon: {
+    alignSelf: "flex-end",
+    marginTop: 20,
+    marginRight: 20,
+  },
   GroupFormContainer: {
     backgroundColor: colors.neutral,
     height: "100%",
@@ -12,15 +20,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 26,
     textAlign: "center",
-    marginVertical: "10%",
+    marginBottom: 10,
+    color: colors.grey
   },
   input: {
-    height: 40,
     margin: 12,
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-    backgroundColor: colors.white
+    backgroundColor: colors.white,
+    elevation: 10
   },
   createGroupButton: {
     alignItems: 'center',
@@ -29,7 +38,7 @@ const styles = StyleSheet.create({
     marginHorizontal: "10%",
     marginTop: "10%",
     borderRadius: 10,
-    elevation: 3,
+    elevation: 10,
     backgroundColor: colors.primary,
   },
   createGroupButtonText: {
@@ -38,83 +47,92 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 0.25,
     color: 'white',
-  }
+  },
+  memberBox: {
+    margin: 12,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 20,
+    backgroundColor: colors.white,
+    elevation: 10
+  },
+  memberDropdown: {
+    backgroundColor: colors.white,
+    marginHorizontal: 12,
+    borderWidth: 1,
+    borderRadius: 10,
+    elevation: 10
+  },
 });
-
-const DATA = [
-    {
-        title: 'Resa till Skåne',
-        amount: 1000,
-        description: 'Lax gruppen planerar en resa till Skåne.',
-        icon: 'fish-outline',
-        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
-        creator: "Hampus Grimskär",
-        id: '0',
-        payments: [
-          {
-              title: "Bussbiljetter",
-              amount: 400,
-              date: "20-04-2023",
-              creator: "Hampus Grimskär",
-              description: "bussbiljetterna till resan",
-              icon: "airplane-outline",
-              members: ["Hampus Grimskär", "Ludvig Nilsson"],
-              id: "0",
-          },
-          {
-              title: "Lunch",
-              amount: 299,
-              date: "20-04-2023",
-              creator: "Hampus Grimskär",
-              description: "Lunch på resan",
-              icon: "restaurant-outline",
-              members: ["Hampus Grimskär", "Ludvig Nilsson"],
-              id: "1",
-          },
-        ]
-      },
-]
-
-function createGroup(title, amount, description, icon, members, creator, id, payments) {
-    DATA.push(
-      {
-        title: title,
-        amount: amount,
-        description: description,
-        icon: icon,
-        members: members,
-        creator: creator,
-        id: id,
-        payments: payments
-      }
-    )
-}
 
 function createGroupForm() {
   const navigation = useNavigation();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedMember, setSelectedMember] = useState([]);
+  
+  const contacts = [
+    // Get contacts from database to display as members to add to group here
+
+
+    // This is sample data
+    { key: '1', value: 'Hampus Grimskär'},
+    { key: '2', value: 'Ludvig Nilsson'},
+  ]
+
   return(
     <View style={styles.GroupFormContainer}>
+      <Icon
+        name="close-outline"
+        size={40}
+        color={colors.grey}
+        onPress={ () => { navigation.navigate("groups"); }}
+        style={styles.closeIcon}
+      />
       <Text style={styles.createGroupText}>Skapa en ny grupp</Text>
       <TextInput
         placeholder="Titel"
         style={styles.input} 
+        onChangeText={input => setTitle(input)}
       />
       <TextInput
         placeholder="Beskrivning"
         style={styles.input} 
+        onChangeText={input => setDescription(input)}
       />
-      <TextInput
-        placeholder="Medlemmar"
-        style={styles.input} 
+      <MultipleSelectList
+        setSelected={(val) => setSelectedMember(val)}
+        data={contacts}
+        save="value"
+        placeholder="Välj Medlemmar"
+        searchPlaceholder="Sök"
+        // onSelect={() => alert(selectedMember)}
+        label="Medlemmar"
+        boxStyles={styles.memberBox}
+        dropdownStyles={styles.memberDropdown}
       />
-      <Pressable 
+      <TouchableOpacity 
         style={styles.createGroupButton}
         onPress={() => {
-          navigation.navigate("app");
+          // Add new group to database here
+          
+
+
+          // navigation should lead to the newly created group
+          navigation.navigate('subgroup', {
+            // groupID: id (Get this from database id)
+            title: title,
+            // should be 0 because new group will have nothing?
+            amount: 0,
+            description: description,
+            members: selectedMember,
+            // should be empty for a new group I think.
+            payments: []
+          });
         }}
       >
         <Text style={styles.createGroupButtonText}>Skapa Grupp</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 }

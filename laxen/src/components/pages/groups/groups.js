@@ -9,6 +9,7 @@ import {
   Text,
   useColorScheme,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import {styles} from './groups_stylesheet';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -39,12 +40,18 @@ function GroupsScreen() {
           onPress={goToAnotherScreen}
         />
       </View>
-      <Button
-        title='Create new group'
-        onPress={() => {navigation.navigate("createGroup")}}
-      />
       <View>
         <GroupCards></GroupCards>
+        <TouchableOpacity
+        onPress={() => {navigation.navigate("createGroup")}}
+        style={styles.createGroupIcon}
+      >
+        <Icon
+          name="add-outline"
+          size={60}
+          color={colors.black}
+        />
+      </TouchableOpacity>
       </View>
     </View>
   );

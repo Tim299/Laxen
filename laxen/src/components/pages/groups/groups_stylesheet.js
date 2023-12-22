@@ -84,6 +84,16 @@ const styles = StyleSheet.create({
     margin: '2%',
     width: '96%',
   },
+  createGroupIcon: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: 60,
+    height: 60,
+    marginTop: 35,
+    borderRadius: 20,
+    elevation: 5,
+    backgroundColor: colors.primary,
+  },
 });
 
 export {styles};

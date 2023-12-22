@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     fontFamily: 'poppins',
+    height: "80%"
   },
   mainView: {
     flex: 1,
