@@ -21,7 +21,7 @@ import HomeScreen from './components/pages/home/home';
 import GroupsScreen from './components/pages/groups/groups';
 import SettingsScreen from './components/pages/settings/settings';
 import Login from './components/pages/login/login';
-import {onAuthStateChanged} from 'firebase/auth';
+import { getAuth,onAuthStateChanged } from "firebase/auth";
 
 function ContactsScreen() {
   return (
