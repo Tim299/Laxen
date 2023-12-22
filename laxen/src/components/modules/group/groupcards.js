@@ -73,26 +73,36 @@ const DATA = [
     id: '0',
     payments: [
       {
-          title: "Bussbiljetter",
-          amount: 400,
-          date: "20-04-2023",
-          creator: "Hampus Grimskär",
-          deschribtion: "bussbiljetterna till resan",
-          icon: "airplane-outline",
-          members: ["Hampus Grimskär", "Ludvig Nilsson"],
-          id: "0",
+        title: 'Bussbiljetter',
+        amount: 400,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'bussbiljetterna till resan',
+        icon: 'airplane-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '0',
       },
       {
-          title: "Lunch",
-          amount: 299,
-          date: "20-04-2023",
-          creator: "Hampus Grimskär",
-          deschribtion: "Lunch på resan",
-          icon: "restaurant-outline",
-          members: ["Hampus Grimskär", "Ludvig Nilsson"],
-          id: "1",
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '1',
       },
-    ]
+      {
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '2',
+      },
+    ],
   },
   {
     title: 'Grupp 2',
@@ -195,14 +205,16 @@ function GroupCards() {
             deschribtion={item.deschribtion}
             members={item.members}
             icon={item.icon}
-            onPress={() => { navigation.navigate('subgroup', {
-              groupID: item.id,
-              title: item.title,
-              amount: item.amount,
-              description: item.deschribtion,
-              members: item.members,
-              payments: item.payments,
-            }); }} // Navigate to the subgroup when clicking it
+            onPress={() => {
+              navigation.navigate('subgroup', {
+                groupID: item.id,
+                title: item.title,
+                amount: item.amount,
+                description: item.deschribtion,
+                members: item.members,
+                payments: item.payments,
+              });
+            }} // Navigate to the subgroup when clicking it
           />
         )}
         keyExtractor={item => item.id}
