@@ -1,6 +1,7 @@
 import React from 'react';
 import {PropsWithChildren} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -38,6 +39,10 @@ function GroupsScreen() {
           onPress={goToAnotherScreen}
         />
       </View>
+      <Button
+        title='Create new group'
+        onPress={() => {navigation.navigate("createGroup")}}
+      />
       <View>
         <GroupCards></GroupCards>
       </View>

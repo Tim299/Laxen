@@ -37,6 +37,7 @@ import HomeScreen from './components/pages/home/home';
 import GroupsScreen from './components/pages/groups/groups';
 import SettingsScreen from './components/pages/settings/settings';
 import SubGroup from './components/modules/group/subgroup';
+import createGroupForm from './components/modules/group/createGroup';
 
 function ContactsScreen() {
   return (
@@ -71,6 +72,11 @@ function AppStack() {
         <stack.Screen
           name="subgroup"
           component={SubGroup}
+        />
+
+        <stack.Screen
+          name="createGroup"
+          component={createGroupForm}
         />
 
       </stack.Navigator>
