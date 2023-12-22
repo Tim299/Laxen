@@ -20,21 +20,9 @@ import {styles} from './App_stylesheet';
 import HomeScreen from './components/pages/home/home';
 import GroupsScreen from './components/pages/groups/groups';
 import SettingsScreen from './components/pages/settings/settings';
+import ContactsScreen from './components/pages/contacts/contacts';
 import Login from './components/pages/login/login';
 import { getAuth,onAuthStateChanged } from "firebase/auth";
-
-function ContactsScreen() {
-  return (
-    <View style={styles.contactsViewContainer}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerFont}>Kontakter</Text>
-      </View>
-      <View>
-        <Text>Contacts</Text>
-      </View>
-    </View>
-  );
-}
 
 const tabs = createMaterialTopTabNavigator();
 
