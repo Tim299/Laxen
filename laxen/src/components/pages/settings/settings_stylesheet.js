@@ -47,13 +47,13 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         backgroundColor: colors.lightblue,
-        height: "90%",
-        marginLeft: '3%'
+        marginLeft: '3%',
+        marginRight: '3%'
     },
     settingsListItem: {
         display: 'flex',
         height: 90,
-        width: '95%',
+        width: '100%',
         backgroundColor: colors.white,
         marginTop: '1%',
         marginBottom: '1%',

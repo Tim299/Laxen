@@ -13,8 +13,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from '../../modules/colors/colors';
-import {styles} from './settings_stylesheet';
-import {FIREBASE_AUTH} from '../login/FirebaseConfig';
+import { styles } from './settings_stylesheet';
+import { FIREBASE_AUTH } from '../login/FirebaseConfig';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -84,10 +84,17 @@ function SettingsScreen() {
         <FlatList
           data={data}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <ListItem title={item.title} description={item.description} icon={item.icon} />}
+          renderItem={({ item }) => <ListItem
+            title={item.title}
+            description={item.description}
+            icon={item.icon}
+          />}
+        />
+        <Button
+          onPress={() => FIREBASE_AUTH.signOut()}
+          title="Logout"
         />
       </View>
-      <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout"></Button>
     </View>
   );
 }
