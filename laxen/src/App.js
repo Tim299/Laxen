@@ -9,7 +9,7 @@ import React, {useEffect, useState} from 'react';
 import {PropsWithChildren} from 'react';
 import {Text, View} from 'react-native';
 
-import {FIREBASE_AUTH} from './components/pages/login/FirebaseConfig';
+import {FIREBASE_AUTH} from '../FirebaseConfig';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';

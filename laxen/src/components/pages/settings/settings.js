@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import {styles} from './settings_stylesheet';
-import {FIREBASE_AUTH} from '../login/FirebaseConfig';
+import {FIREBASE_AUTH} from '../../../../FirebaseConfig';
 
 function SettingsScreen() {
   return (
