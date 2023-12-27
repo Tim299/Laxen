@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import subGroup from './subgroup';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
-import {addDoc, collection,doc, set} from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
@@ -122,14 +122,6 @@ const DATA = [
     members: ['Jonathan Skoog', 'Donald Elezi'],
     id: '3',
   },
-  {
-    title: 'Grupp 4',
-    amount: 699,
-    deschribtion: 'Lax gruppen planerar en resa till Malmö.',
-    icon: 'restaurant-outline',
-    members: ['Jonathan Skoog', 'Donald Elezi'],
-    id: '4',
-  },
 ];
 
 function Member({member}) {
@@ -190,41 +182,27 @@ const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
 );
 
 function GroupCards() {
-  const navigation = useNavigation();
+  const [groups, setGroups] = useState([]);
 
-  const goToGroup = () => {
-    navigation.navigate('HomeScreen');
-  };
-
-
-
-    const addDataToFirestore = async () => {
+  useEffect(() => {
+    const fetchGroups = async () => {
       try {
-
-        const data = {
-          groupID: 'Task22',
-          name: 'Buy milk',
-          priority: 1
-        };
-
-        // Add a document to the 'tasks' collection
-        const docRef = await addDoc(collection(FIREBASE_DB, 'tasks'), data);
-        console.log('Document added with ID: ', docRef.id);
+        const groupsCollection = collection(FIREBASE_DB, 'tasks');
+        const groupsSnapshot = await getDocs(groupsCollection);
+        const groupsData = groupsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        setGroups(groupsData);
       } catch (error) {
-        console.error('Error adding document: ', error);
+        console.error('Error fetching groups: ', error);
       }
     };
 
- 
-
+    fetchGroups();
+  }, []);
 
   return (
     <View style={styles.container}>
-     <TouchableOpacity onPress={addDataToFirestore}>
-        <Text>Create Firestore Document</Text>
-      </TouchableOpacity>
       <FlatList
-        data={DATA}
+        data={groups}
         renderItem={({item}) => (
           <GroupCard
             title={item.title}
@@ -239,7 +217,7 @@ function GroupCards() {
               description: item.deschribtion,
               members: item.members,
               payments: item.payments,
-            }); }} // Navigate to the subgroup when clicking it
+            }); }}
           />
         )}
         keyExtractor={item => item.id}
