@@ -2,24 +2,28 @@ import * as React from 'react';
 import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
+import subGroup from './subgroup';
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '100%',
+    height: '85%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     fontFamily: 'poppins',
+    marginTop: '0%',
   },
   mainView: {
     flex: 1,
     alignSelf: 'center',
     backgroundColor: colors.white,
-    marginTop: '6%',
     borderRadius: 10,
     width: '92%',
     padding: '3%',
+    marginVertical: '3%',
+    elevation: 5,
   },
   paymentTitle: {
     color: colors.black,
@@ -69,6 +73,28 @@ const DATA = [
     icon: 'fish-outline',
     members: ['Hampus Grimskär', 'Ludvig Nilsson'],
     id: '0',
+    payments: [
+      {
+          title: "Bussbiljetter",
+          amount: 400,
+          date: "20-04-2023",
+          creator: "Hampus Grimskär",
+          deschribtion: "bussbiljetterna till resan",
+          icon: "airplane-outline",
+          members: ["Hampus Grimskär", "Ludvig Nilsson"],
+          id: "0",
+      },
+      {
+          title: "Lunch",
+          amount: 299,
+          date: "20-04-2023",
+          creator: "Hampus Grimskär",
+          deschribtion: "Lunch på resan",
+          icon: "restaurant-outline",
+          members: ["Hampus Grimskär", "Ludvig Nilsson"],
+          id: "1",
+      },
+    ]
   },
   {
     title: 'Grupp 2',
@@ -94,6 +120,14 @@ const DATA = [
     members: ['Jonathan Skoog', 'Donald Elezi'],
     id: '3',
   },
+  {
+    title: 'Grupp 4',
+    amount: 699,
+    deschribtion: 'Lax gruppen planerar en resa till Malmö.',
+    icon: 'restaurant-outline',
+    members: ['Jonathan Skoog', 'Donald Elezi'],
+    id: '4',
+  },
 ];
 
 function Member({member}) {
@@ -114,8 +148,8 @@ function Member({member}) {
   );
 }
 
-const GroupCard = ({title, amount, deschribtion, members, icon}) => (
-  <View style={styles.mainView}>
+const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
+  <TouchableOpacity style={styles.mainView} onPress={onPress}>
     <View
       style={{
         display: 'flex',
@@ -150,10 +184,16 @@ const GroupCard = ({title, amount, deschribtion, members, icon}) => (
         <Text style={styles.paymentAmount}>{amount} kr</Text>
       </View>
     </View>
-  </View>
+  </TouchableOpacity>
 );
 
 function GroupCards() {
+  const navigation = useNavigation();
+
+  const goToGroup = () => {
+    navigation.navigate('HomeScreen');
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -165,6 +205,14 @@ function GroupCards() {
             deschribtion={item.deschribtion}
             members={item.members}
             icon={item.icon}
+            onPress={() => { navigation.navigate('subgroup', {
+              groupID: item.id,
+              title: item.title,
+              amount: item.amount,
+              description: item.deschribtion,
+              members: item.members,
+              payments: item.payments,
+            }); }} // Navigate to the subgroup when clicking it
           />
         )}
         keyExtractor={item => item.id}

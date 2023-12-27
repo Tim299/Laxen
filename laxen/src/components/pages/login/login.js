@@ -92,9 +92,10 @@ const Login = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    height: '100%',
     backgroundColor: neutral,
   },
   logoContainer: {
