@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    justifyContent: 'space-between'
   },
   groupsView: {},
   contactsViewContainer: {
@@ -83,6 +84,30 @@ const styles = StyleSheet.create({
   paymentsFeedContainer: {
     margin: '2%',
     width: '96%',
+  },
+  navBarContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginTop: '0%',
+  },
+  createGroupIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 20,
+    elevation: 5,
+    backgroundColor: colors.primary,
+    alignSelf: 'center',
+    marginTop: '2%',
+  },
+  settingsIcon: {
+    width: 30,
+    height: 30,
+  },
+  contactsIcon: {
+    width: 30,
+    height: 30,
   },
 });
 

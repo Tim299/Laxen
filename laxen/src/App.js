@@ -13,13 +13,17 @@ import {FIREBASE_AUTH} from './components/pages/login/FirebaseConfig';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
+import 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import * as colors from './components/modules/colors/colors';
 import {styles} from './App_stylesheet';
 import HomeScreen from './components/pages/home/home';
 import GroupsScreen from './components/pages/groups/groups';
 import SettingsScreen from './components/pages/settings/settings';
+import SubGroup from './components/modules/group/subgroup';
+import createGroupForm from './components/modules/group/createGroup';
 import Login from './components/pages/login/login';
 import { getAuth,onAuthStateChanged } from "firebase/auth";
 
@@ -36,7 +40,37 @@ function ContactsScreen() {
   );
 }
 
+const stack = createStackNavigator();
 const tabs = createMaterialTopTabNavigator();
+
+function AppStack() {
+  return(
+    <NavigationContainer>
+      <stack.Navigator
+        initialRouteName="app"
+        screenOptions={{
+          headerShown: false,
+        }}
+      > 
+        <stack.Screen
+          name="app"
+          component={App}
+        />
+
+        <stack.Screen
+          name="subgroup"
+          component={SubGroup}
+        />
+
+        <stack.Screen
+          name="createGroup"
+          component={createGroupForm}
+        />
+
+      </stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
 function App() {
   const [user, setUser] = useState(null);
@@ -48,8 +82,9 @@ function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      {user ? (
+    // <NavigationContainer>
+    // <View>
+      user ? (
         <tabs.Navigator
           tabBarPosition="bottom"
           screenOptions={{
@@ -57,7 +92,7 @@ function App() {
             tabBarIndicatorStyle: styles.tabsIndicator,
             tabBarAndroidRipple: {color: colors.white},
           }}>
-          <tabs.Screen
+          {/* <tabs.Screen
             name="HomeScreen"
             component={HomeScreen}
             options={{
@@ -72,61 +107,65 @@ function App() {
               tabBarShowLabel: false,
               title: 'HomeScreen',
             }}
-          />
+          /> */}
 
-          <tabs.Screen
-            name="groups"
-            component={GroupsScreen}
-            options={{
-              tabBarIcon: ({focused}) => (
-                <Icon
-                  name="comments"
-                  color={focused ? colors.darkblue : colors.grey}
-                  size={focused ? 24 : 24}
-                />
-              ),
-              tabBarShowIcon: true,
-              tabBarShowLabel: false,
-            }}
-          />
+        <tabs.Screen
+          name="contacts"
+          component={ContactsScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name={focused ? "people-sharp" : "people-outline"}
+                color={focused ? colors.black : colors.black}
+                size={focused ? 24 : 24}
+              />
+            ),
+            tabBarShowIcon: true,
+            tabBarShowLabel: false,
+            tabBarIconStyle: styles.tabBarIcons,
+          }}
+        />
 
-          <tabs.Screen
-            name="contacts"
-            component={ContactsScreen}
-            options={{
-              tabBarIcon: ({focused}) => (
-                <Icon
-                  name="user"
-                  color={focused ? colors.darkblue : colors.grey}
-                  size={focused ? 24 : 24}
-                />
-              ),
-              tabBarShowIcon: true,
-              tabBarShowLabel: false,
-            }}
-          />
+        <tabs.Screen
+          name="groups"
+          component={GroupsScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name={focused ? "wallet-sharp" : "wallet-outline"}
+                color={focused ? colors.black : colors.black}
+                size={focused ? 24 : 24}
+              />
+            ),
+            tabBarShowIcon: true,
+            tabBarShowLabel: false,
+            tabBarIconStyle: styles.tabBarIcons,
+          }}
+        />
 
-          <tabs.Screen
-            name="settings"
-            component={SettingsScreen}
-            options={{
-              tabBarIcon: ({focused}) => (
-                <Icon
-                  name="gear"
-                  color={focused ? colors.darkblue : colors.grey}
-                  size={focused ? 24 : 24}
-                />
-              ),
-              tabBarShowIcon: true,
-              tabBarShowLabel: false,
-            }}
-          />
-        </tabs.Navigator>
+        <tabs.Screen
+          name="settings"
+          component={SettingsScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name={focused ? "settings-sharp" : "settings-outline"}
+                color={focused ? colors.black : colors.black}
+                size={focused ? 24 : 24}
+              />
+            ),
+            tabBarShowIcon: true,
+            tabBarShowLabel: false,
+            tabBarIconStyle: styles.tabBarIcons,
+          }}
+        />
+      </tabs.Navigator>
       ) : (
-        <Login />
-      )}
-    </NavigationContainer>
+        <Login/>
+      )
+    // </View>
+    // </NavigationContainer>
   );
 }
 
-export default App;
+export default AppStack;

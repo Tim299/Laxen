@@ -57,9 +57,11 @@ const styles = StyleSheet.create({
     },
     tabs: {
         backgroundColor: colors.white,
-        height: "7%",
+        height: "10%",
         borderTopWidth: 1,
-        borderColor: colors.grey
+        borderColor: colors.grey,
+        display: 'flex',
+        justifyContent: 'space-between',
     },
     tabsIndicator: {
         backgroundColor: colors.beige,
@@ -76,7 +78,15 @@ const styles = StyleSheet.create({
     paymentsFeedContainer: {
         margin: "2%",
         width: "96%",
-    }
+    },
+    tabBarIcons: {
+        width: 60,
+        height: 60,
+        borderRadius: 20,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
 
 export {styles};
