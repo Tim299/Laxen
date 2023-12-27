@@ -3,7 +3,7 @@ import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
-import {addDoc, collection} from 'firebase/firestore';
+import {addDoc, collection,doc, set} from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
@@ -156,23 +156,21 @@ const GroupCard = ({title, amount, deschribtion, members, icon}) => (
 );
 
 function GroupCards() {
-  addDoc(collection(FIREBASE_DB, 'groups'), {
-    title: 'test',
-    amount: 200,
-    description: 'testetstetst', // Note the corrected spelling of 'description'
-    icon: 'no icon',
-    members: ['Tim'], // If 'members' should be an array, use square brackets []
-    id: '2',
-  })
-    .then(docRef => {
-      console.log('Document written with ID: ', docRef.id);
-    })
-    .catch(error => {
-      console.error('Error adding document: ', error);
+  const setUserData = async () => {
+    const docRef = FIREBASE_DB.collection('users').doc('alovelace');
+
+    await docRef.set({
+      first: 'Ada',
+      last: 'Lovelace',
+      born: 1815
     });
+  };
 
   return (
     <View style={styles.container}>
+     <TouchableOpacity onPress={setUserData}>
+        <Text>Create Firestore Document</Text>
+      </TouchableOpacity>
       <FlatList
         data={DATA}
         renderItem={({item}) => (

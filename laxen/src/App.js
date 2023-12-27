@@ -49,7 +49,7 @@ function App() {
 
   return (
     <NavigationContainer>
-      {user ? (
+      {!user ? (
         <tabs.Navigator
           tabBarPosition="bottom"
           screenOptions={{

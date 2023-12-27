@@ -16,6 +16,7 @@
     "@react-navigation/material-top-tabs": "^6.6.5",
     "@react-navigation/native": "^6.1.9",
     "firebase": "^10.7.1",
+    "firebase-admin": "^12.0.0",
     "react": "18.2.0",
     "react-native": "^0.72.7",
     "react-native-pager-view": "^6.2.3",
