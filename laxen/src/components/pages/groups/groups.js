@@ -43,15 +43,15 @@ function GroupsScreen() {
       <View>
         <GroupCards></GroupCards>
         <TouchableOpacity
-        onPress={() => {navigation.navigate("createGroup")}}
-        style={styles.createGroupIcon}
-      >
-        <Icon
-          name="add-outline"
-          size={60}
-          color={colors.black}
-        />
-      </TouchableOpacity>
+          onPress={() => {navigation.navigate("createGroup")}}
+          style={styles.createGroupIcon}
+          >
+          <Icon
+            name="add-outline"
+            size={60}
+            color={colors.black}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

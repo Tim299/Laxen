@@ -8,21 +8,22 @@ import subGroup from './subgroup';
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '100%',
+    height: '85%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     fontFamily: 'poppins',
-    height: "80%"
+    marginTop: '0%',
   },
   mainView: {
     flex: 1,
     alignSelf: 'center',
     backgroundColor: colors.white,
-    marginTop: '6%',
     borderRadius: 10,
     width: '92%',
     padding: '3%',
+    marginVertical: '3%',
+    elevation: 5,
   },
   paymentTitle: {
     color: colors.black,
@@ -118,6 +119,14 @@ const DATA = [
     icon: 'restaurant-outline',
     members: ['Jonathan Skoog', 'Donald Elezi'],
     id: '3',
+  },
+  {
+    title: 'Grupp 4',
+    amount: 699,
+    deschribtion: 'Lax gruppen planerar en resa till Malmö.',
+    icon: 'restaurant-outline',
+    members: ['Jonathan Skoog', 'Donald Elezi'],
+    id: '4',
   },
 ];
 

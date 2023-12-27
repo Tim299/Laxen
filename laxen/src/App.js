@@ -27,7 +27,7 @@ import {
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -84,7 +84,7 @@ function AppStack() {
   );
 }
 
-function App({ navigation }) {
+function App() {
   return (
     // <NavigationContainer>
       <tabs.Navigator
@@ -94,7 +94,7 @@ function App({ navigation }) {
           tabBarIndicatorStyle: styles.tabsIndicator,
           tabBarAndroidRipple: {color: colors.white},
         }}>
-        <tabs.Screen
+        {/* <tabs.Screen
           name="HomeScreen"
           component={HomeScreen}
           options={{
@@ -109,6 +109,23 @@ function App({ navigation }) {
             tabBarShowLabel: false,
             title: 'HomeScreen',
           }}
+        /> */}
+
+        <tabs.Screen
+          name="contacts"
+          component={ContactsScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon
+                name={focused ? "people-sharp" : "people-outline"}
+                color={focused ? colors.black : colors.black}
+                size={focused ? 24 : 24}
+              />
+            ),
+            tabBarShowIcon: true,
+            tabBarShowLabel: false,
+            tabBarIconStyle: styles.tabBarIcons,
+          }}
         />
 
         <tabs.Screen
@@ -117,29 +134,14 @@ function App({ navigation }) {
           options={{
             tabBarIcon: ({focused}) => (
               <Icon
-                name="comments"
-                color={focused ? colors.darkblue : colors.grey}
+                name={focused ? "wallet-sharp" : "wallet-outline"}
+                color={focused ? colors.black : colors.black}
                 size={focused ? 24 : 24}
               />
             ),
             tabBarShowIcon: true,
             tabBarShowLabel: false,
-          }}
-        />
-
-        <tabs.Screen
-          name="contacts"
-          component={ContactsScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                name="user"
-                color={focused ? colors.darkblue : colors.grey}
-                size={focused ? 24 : 24}
-              />
-            ),
-            tabBarShowIcon: true,
-            tabBarShowLabel: false,
+            tabBarIconStyle: styles.tabBarIcons,
           }}
         />
 
@@ -149,13 +151,14 @@ function App({ navigation }) {
           options={{
             tabBarIcon: ({focused}) => (
               <Icon
-                name="gear"
-                color={focused ? colors.darkblue : colors.grey}
+                name={focused ? "settings-sharp" : "settings-outline"}
+                color={focused ? colors.black : colors.black}
                 size={focused ? 24 : 24}
               />
             ),
             tabBarShowIcon: true,
             tabBarShowLabel: false,
+            tabBarIconStyle: styles.tabBarIcons,
           }}
         />
       </tabs.Navigator>

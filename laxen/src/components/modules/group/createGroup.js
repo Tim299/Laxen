@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function createGroupForm() {
+function CreateGroupForm() {
   const navigation = useNavigation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -181,4 +181,4 @@ function createGroupForm() {
   );
 }
 
-export default createGroupForm;
+export default CreateGroupForm;
