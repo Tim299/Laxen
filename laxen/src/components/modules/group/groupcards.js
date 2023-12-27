@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import subGroup from './subgroup';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, onSnapshot } from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
@@ -183,22 +183,17 @@ const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
 
 function GroupCards() {
   const navigation = useNavigation();
-    navigation.navigate('HomeScreen');
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    const fetchGroups = async () => {
-      try {
-        const groupsCollection = collection(FIREBASE_DB, 'tasks');
-        const groupsSnapshot = await getDocs(groupsCollection);
-        const groupsData = groupsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-        setGroups(groupsData);
-      } catch (error) {
-        console.error('Error fetching groups: ', error);
-      }
-    };
+    const groupsCollection = collection(FIREBASE_DB, 'tasks');
+    const unsubscribe = onSnapshot(groupsCollection, (snapshot) => {
+      const groupsData = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setGroups(groupsData);
+    });
 
-    fetchGroups();
+    return () => unsubscribe();
+
   }, []);
 
   return (
