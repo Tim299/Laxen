@@ -182,6 +182,8 @@ const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
 );
 
 function GroupCards() {
+  const navigation = useNavigation();
+    navigation.navigate('HomeScreen');
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
