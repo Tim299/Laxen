@@ -14,7 +14,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import {FIREBASE_AUTH, FIREBASE_APP} from './FirebaseConfig';
+import {FIREBASE_AUTH, FIREBASE_APP} from '../../../../FirebaseConfig';
 import { primary,secondary,neutral } from '../../modules/colors/colors';
 
 

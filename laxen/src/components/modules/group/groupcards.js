@@ -1,9 +1,11 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import subGroup from './subgroup';
+import {FIREBASE_DB} from '../../../../FirebaseConfig';
+import {addDoc, collection,doc, set} from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
@@ -194,8 +196,33 @@ function GroupCards() {
     navigation.navigate('HomeScreen');
   };
 
+
+
+    const addDataToFirestore = async () => {
+      try {
+
+        const data = {
+          groupID: 'Task22',
+          name: 'Buy milk',
+          priority: 1
+        };
+
+        // Add a document to the 'tasks' collection
+        const docRef = await addDoc(collection(FIREBASE_DB, 'tasks'), data);
+        console.log('Document added with ID: ', docRef.id);
+      } catch (error) {
+        console.error('Error adding document: ', error);
+      }
+    };
+
+ 
+
+
   return (
     <View style={styles.container}>
+     <TouchableOpacity onPress={addDataToFirestore}>
+        <Text>Create Firestore Document</Text>
+      </TouchableOpacity>
       <FlatList
         data={DATA}
         renderItem={({item}) => (
