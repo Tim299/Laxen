@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     fontFamily: 'poppins',
     fontWeight: 'bold',
   },
-  deschribtion: {
+  description: {
     color: colors.black,
     fontSize: 12,
     fontFamily: 'poppins',
@@ -71,7 +71,7 @@ const DATA = [
   {
     title: 'Resa till Skåne',
     amount: 1000,
-    deschribtion: 'Lax gruppen planerar en resa till Skåne.',
+    description: 'Lax gruppen planerar en resa till Skåne.',
     icon: 'fish-outline',
     members: ['Hampus Grimskär', 'Ludvig Nilsson'],
     id: '0',
@@ -81,7 +81,7 @@ const DATA = [
           amount: 400,
           date: "20-04-2023",
           creator: "Hampus Grimskär",
-          deschribtion: "bussbiljetterna till resan",
+          description: "bussbiljetterna till resan",
           icon: "airplane-outline",
           members: ["Hampus Grimskär", "Ludvig Nilsson"],
           id: "0",
@@ -91,7 +91,7 @@ const DATA = [
           amount: 299,
           date: "20-04-2023",
           creator: "Hampus Grimskär",
-          deschribtion: "Lunch på resan",
+          description: "Lunch på resan",
           icon: "restaurant-outline",
           members: ["Hampus Grimskär", "Ludvig Nilsson"],
           id: "1",
@@ -101,7 +101,7 @@ const DATA = [
   {
     title: 'Grupp 2',
     amount: 482,
-    deschribtion: 'Lax gruppen planerar en resa till bordershoppen.',
+    description: 'Lax gruppen planerar en resa till bordershoppen.',
     icon: 'airplane-outline',
     members: ['Hampus Grimskär'],
     id: '1',
@@ -109,7 +109,7 @@ const DATA = [
   {
     title: 'Grupp 3',
     amount: 6990,
-    deschribtion: 'Lax gruppen planerar en resa till Liseberg.',
+    description: 'Lax gruppen planerar en resa till Liseberg.',
     icon: 'american-football-outline',
     members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Tim Larsson'],
     id: '2',
@@ -117,7 +117,7 @@ const DATA = [
   {
     title: 'Grupp 4',
     amount: 699,
-    deschribtion: 'Lax gruppen planerar en resa till Malmö.',
+    description: 'Lax gruppen planerar en resa till Malmö.',
     icon: 'restaurant-outline',
     members: ['Jonathan Skoog', 'Donald Elezi'],
     id: '3',
@@ -142,7 +142,7 @@ function Member({member}) {
   );
 }
 
-const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
+const GroupCard = ({title, amount, description, members, icon, onPress}) => (
   <TouchableOpacity style={styles.mainView} onPress={onPress}>
     <View
       style={{
@@ -155,7 +155,7 @@ const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
       <Icon name={icon} size={22} color={colors.accent} />
     </View>
 
-    <Text style={styles.deschribtion}>{deschribtion}</Text>
+    <Text style={styles.description}>{description}</Text>
 
     <View style={styles.groupMembers}>
       <FlatList
@@ -204,14 +204,14 @@ function GroupCards() {
           <GroupCard
             title={item.title}
             amount={item.amount}
-            deschribtion={item.deschribtion}
+            description={item.description}
             members={item.members}
             icon={item.icon}
             onPress={() => { navigation.navigate('subgroup', {
               groupID: item.id,
               title: item.title,
               amount: item.amount,
-              description: item.deschribtion,
+              description: item.description,
               members: item.members,
               payments: item.payments,
             }); }}

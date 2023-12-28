@@ -102,7 +102,6 @@ function CreateGroupForm() {
   const contacts = [
     // Get contacts from database to display as members to add to group here
 
-
     // This is sample data
     { key: '1', value: 'Hampus Grimskär'},
     { key: '2', value: 'Ludvig Nilsson'},
@@ -120,15 +119,13 @@ function CreateGroupForm() {
       const currentHighestID = querySnapshot.size;
   
       // Extract values from selectedMember or set it to an empty array if undefined
-      const members = selectedMember ? selectedMember.map(member => member.value) : [];
   
       const newGroup = {
         title,
-        amount: 0, // You can set the default value for amount
+        amount: 0,
         description,
-        members,
-        id: (currentHighestID + 1).toString(), // Generate a new ID
-        // Add more fields as needed
+        members: selectedMember,
+        id: (currentHighestID + 1).toString(),
       };
   
       console.log('New group data:', newGroup);
