@@ -21,24 +21,14 @@ import * as colors from './components/modules/colors/colors';
 import {styles} from './App_stylesheet';
 import HomeScreen from './components/pages/home/home';
 import GroupsScreen from './components/pages/groups/groups';
+import ContactsScreen from './components/pages/contacts/contacts';
 import SettingsScreen from './components/pages/settings/settings';
 import SubGroup from './components/modules/group/subgroup';
 import createGroupForm from './components/modules/group/createGroup';
 import Login from './components/pages/login/login';
 import { getAuth,onAuthStateChanged } from "firebase/auth";
-
-function ContactsScreen() {
-  return (
-    <View style={styles.contactsViewContainer}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerFont}>Kontakter</Text>
-      </View>
-      <View>
-        <Text>Contacts</Text>
-      </View>
-    </View>
-  );
-}
+import CreatePaymentForm from './components/modules/payment/createPayment';
+import CreateContact from './components/pages/contacts/createContact';
 
 const stack = createStackNavigator();
 const tabs = createMaterialTopTabNavigator();
@@ -65,6 +55,16 @@ function AppStack() {
         <stack.Screen
           name="createGroup"
           component={createGroupForm}
+        />
+
+        <stack.Screen
+          name="createPayment"
+          component={CreatePaymentForm}
+        />
+
+        <stack.Screen
+          name="createContact"
+          component={CreateContact}
         />
 
       </stack.Navigator>

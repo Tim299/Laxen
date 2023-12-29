@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    justifyContent: 'space-between'
+    justifyContent: 'flex-start',
   },
   groupsView: {},
   contactsViewContainer: {
@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: colors.primary,
     alignSelf: 'center',
-    marginTop: '2%',
   },
   settingsIcon: {
     width: 30,
@@ -109,6 +108,31 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
+  createButtonsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: '-15%',
+    height: '15%',
+  },
+  createPaymentButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '60%',
+    height: '60%',
+    backgroundColor: colors.primary,
+    alignSelf: "center",
+    borderRadius: 15,
+    elevation: 5,
+    alignSelf: 'center',
+  },
+  createPaymentButtonText: {
+    fontFamily: 'poppins',
+    fontSize: 26,
+    color: colors.black,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  }
 });
 
 export {styles};

@@ -42,6 +42,8 @@ function GroupsScreen() {
       </View>
       <View>
         <GroupCards></GroupCards>
+      </View>
+      <View style={styles.createButtonsContainer}>
         <TouchableOpacity
           onPress={() => {navigation.navigate("createGroup")}}
           style={styles.createGroupIcon}
@@ -52,6 +54,17 @@ function GroupsScreen() {
             color={colors.black}
           />
         </TouchableOpacity>
+        <TouchableOpacity
+                onPress={() => {navigation.navigate("createPayment")}}
+                style={styles.createPaymentButton}
+                >
+                <Text style={styles.createPaymentButtonText}>Lägg till betalning</Text>
+                {/* <Icon
+                    name="add-outline"
+                    size={60}
+                    color={colors.black}
+                /> */}
+          </TouchableOpacity>
       </View>
     </View>
   );
