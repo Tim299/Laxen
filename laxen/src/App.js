@@ -84,7 +84,7 @@ function App() {
   return (
     // <NavigationContainer>
     // <View>
-      user ? (
+      !user ? (
         <tabs.Navigator
           tabBarPosition="bottom"
           screenOptions={{

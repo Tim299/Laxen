@@ -164,7 +164,8 @@ function CreatePaymentForm() {
         description,
         amount: parseInt(amount),
         members: selectedMember,
-        id: (currentHighestID + 1).toString(),
+        id: (currentHighestID + 1).toString(), 
+        group: selectedGroup,
       };
   
       console.log('New payment data:', newPayment);
@@ -175,7 +176,7 @@ function CreatePaymentForm() {
   
       console.log(`Payment added with ID ${newPayment.id}`);
   
-      // Navigate to the newly created group
+      navigation.navigate('subgroup', selectedGroup);
     } catch (error) {
       console.error('Error creating payment: ', error);
     }
