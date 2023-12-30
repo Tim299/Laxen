@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   TextInput,
@@ -14,20 +14,25 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import {FIREBASE_AUTH, FIREBASE_APP} from '../../../../FirebaseConfig';
-import { primary,secondary,neutral } from '../../modules/colors/colors';
-
+import {FIREBASE_AUTH, FIREBASE_DB} from '../../../../FirebaseConfig';
+import {primary, secondary, neutral} from '../../modules/colors/colors';
+import {collection, doc, setDoc, getDocs} from 'firebase/firestore';
+import {UserIdContext} from '../../../App';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const {currentUserId, setCurrentUserId} = useContext(UserIdContext);
+
   const auth = FIREBASE_AUTH;
 
   const SignIn = async () => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
+      const user = response.user;
+      setCurrentUserId(user.uid);
     } catch (error) {
       Alert.alert('Sign in failed');
     } finally {
@@ -43,6 +48,25 @@ const Login = () => {
         email,
         password,
       );
+      const user = response.user;
+      setCurrentUserId(user.uid);
+
+      try {
+        const querySnapshot = await getDocs(collection(FIREBASE_DB, 'users'));
+        const currentHighestID = querySnapshot.size;
+
+        const newUser = {
+          email,
+          groups: [],
+          friends: [],
+          id: user.uid,
+        };
+
+        const docRef = doc(collection(FIREBASE_DB, 'users'), newUser.id);
+        await setDoc(docRef, newUser);
+      } catch (error) {
+        console.error('Error addin user to database: ', error);
+      }
       Alert.alert('Created account');
     } catch (error) {
       Alert.alert('Sign up failed');
