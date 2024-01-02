@@ -5,155 +5,149 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect, useState, createContext} from 'react';
 import {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {Text, View} from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {FIREBASE_AUTH} from '../FirebaseConfig';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
-import { createStackNavigator } from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 
 import * as colors from './components/modules/colors/colors';
 import {styles} from './App_stylesheet';
 import HomeScreen from './components/pages/home/home';
 import GroupsScreen from './components/pages/groups/groups';
+import ContactsScreen from './components/pages/contacts/contacts';
 import SettingsScreen from './components/pages/settings/settings';
 import SubGroup from './components/modules/group/subgroup';
-
-function ContactsScreen() {
-  return (
-    <View style={styles.contactsViewContainer}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerFont}>Kontakter</Text>
-      </View>
-      <View>
-        <Text>Contacts</Text>
-      </View>
-    </View>
-  );
-}
+import createGroupForm from './components/modules/group/createGroup';
+import Login from './components/pages/login/login';
+import {getAuth, onAuthStateChanged} from 'firebase/auth';
+import CreatePaymentForm from './components/modules/payment/createPayment';
+import CreateContact from './components/pages/contacts/createContact';
 
 const stack = createStackNavigator();
 const tabs = createMaterialTopTabNavigator();
 
 function AppStack() {
-  return(
+  return (
     <NavigationContainer>
       <stack.Navigator
         initialRouteName="app"
         screenOptions={{
           headerShown: false,
-        }}
-      > 
-        <stack.Screen
-          name="app"
-          component={App}
-        />
+        }}>
+        <stack.Screen name="app" component={App} />
 
-        <stack.Screen
-          name="subgroup"
-          component={SubGroup}
-        />
+        <stack.Screen name="subgroup" component={SubGroup} />
 
+        <stack.Screen name="createGroup" component={createGroupForm} />
+
+        <stack.Screen name="createPayment" component={CreatePaymentForm} />
+
+        <stack.Screen name="createContact" component={CreateContact} />
       </stack.Navigator>
     </NavigationContainer>
   );
 }
+export const UserIdContext = createContext();
 
-function App({ navigation }) {
+function App() {
+  const [user, setUser] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, user => {
+      setUser(user);
+    });
+  }, []);
+
   return (
-    // <NavigationContainer>
-      <tabs.Navigator
-        tabBarPosition="bottom"
-        screenOptions={{
-          tabBarStyle: styles.tabs,
-          tabBarIndicatorStyle: styles.tabsIndicator,
-          tabBarAndroidRipple: {color: colors.white},
-        }}>
-        <tabs.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                name="home"
-                color={focused ? colors.darkblue : colors.grey}
-                size={focused ? 24 : 24}
-              />
-            ),
-            tabBarShowIcon: true,
-            tabBarShowLabel: false,
-            title: 'HomeScreen',
-          }}
-        />
+    <UserIdContext.Provider value={{currentUserId, setCurrentUserId}}>
+      {user ? (
+        <tabs.Navigator
+          tabBarPosition="bottom"
+          screenOptions={{
+            tabBarStyle: styles.tabs,
+            tabBarIndicatorStyle: styles.tabsIndicator,
+            tabBarAndroidRipple: {color: colors.white},
+          }}>
+          {/* <tabs.Screen
+            name="HomeScreen"
+            component={HomeScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name="home"
+                  color={focused ? colors.darkblue : colors.grey}
+                  size={focused ? 24 : 24}
+                />
+              ),
+              tabBarShowIcon: true,
+              tabBarShowLabel: false,
+              title: 'HomeScreen',
+            }}
+          /> */}
 
-        <tabs.Screen
-          name="groups"
-          component={GroupsScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                name="comments"
-                color={focused ? colors.darkblue : colors.grey}
-                size={focused ? 24 : 24}
-              />
-            ),
-            tabBarShowIcon: true,
-            tabBarShowLabel: false,
-          }}
-        />
+          <tabs.Screen
+            name="contacts"
+            component={ContactsScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name={focused ? 'people-sharp' : 'people-outline'}
+                  color={focused ? colors.black : colors.black}
+                  size={focused ? 24 : 24}
+                />
+              ),
+              tabBarShowIcon: true,
+              tabBarShowLabel: false,
+              tabBarIconStyle: styles.tabBarIcons,
+            }}
+          />
 
-        <tabs.Screen
-          name="contacts"
-          component={ContactsScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                name="user"
-                color={focused ? colors.darkblue : colors.grey}
-                size={focused ? 24 : 24}
-              />
-            ),
-            tabBarShowIcon: true,
-            tabBarShowLabel: false,
-          }}
-        />
+          <tabs.Screen
+            name="groups"
+            component={GroupsScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name={focused ? 'wallet-sharp' : 'wallet-outline'}
+                  color={focused ? colors.black : colors.black}
+                  size={focused ? 24 : 24}
+                />
+              ),
+              tabBarShowIcon: true,
+              tabBarShowLabel: false,
+              tabBarIconStyle: styles.tabBarIcons,
+            }}
+          />
 
-        <tabs.Screen
-          name="settings"
-          component={SettingsScreen}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <Icon
-                name="gear"
-                color={focused ? colors.darkblue : colors.grey}
-                size={focused ? 24 : 24}
-              />
-            ),
-            tabBarShowIcon: true,
-            tabBarShowLabel: false,
-          }}
-        />
-      </tabs.Navigator>
-    // </NavigationContainer>
+          <tabs.Screen
+            name="settings"
+            component={SettingsScreen}
+            options={{
+              tabBarIcon: ({focused}) => (
+                <Icon
+                  name={focused ? 'settings-sharp' : 'settings-outline'}
+                  color={focused ? colors.black : colors.black}
+                  size={focused ? 24 : 24}
+                />
+              ),
+              tabBarShowIcon: true,
+              tabBarShowLabel: false,
+              tabBarIconStyle: styles.tabBarIcons,
+            }}
+          />
+        </tabs.Navigator>
+      ) : (
+        <Login />
+      )}
+    </UserIdContext.Provider>
   );
 }
 

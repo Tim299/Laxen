@@ -1,27 +1,31 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import subGroup from './subgroup';
+import {FIREBASE_DB} from '../../../../FirebaseConfig';
+import { addDoc, collection, onSnapshot } from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '100%',
+    height: '85%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     fontFamily: 'poppins',
+    marginTop: '0%',
   },
   mainView: {
     flex: 1,
     alignSelf: 'center',
     backgroundColor: colors.white,
-    marginTop: '6%',
     borderRadius: 10,
     width: '92%',
     padding: '3%',
+    marginVertical: '3%',
+    elevation: 5,
   },
   paymentTitle: {
     color: colors.black,
@@ -35,7 +39,7 @@ const styles = StyleSheet.create({
     fontFamily: 'poppins',
     fontWeight: 'bold',
   },
-  deschribtion: {
+  description: {
     color: colors.black,
     fontSize: 12,
     fontFamily: 'poppins',
@@ -67,7 +71,7 @@ const DATA = [
   {
     title: 'Resa till Skåne',
     amount: 1000,
-    deschribtion: 'Lax gruppen planerar en resa till Skåne.',
+    description: 'Lax gruppen planerar en resa till Skåne.',
     icon: 'fish-outline',
     members: ['Hampus Grimskär', 'Ludvig Nilsson'],
     id: '0',
@@ -138,7 +142,7 @@ const DATA = [
   {
     title: 'Grupp 2',
     amount: 482,
-    deschribtion: 'Lax gruppen planerar en resa till bordershoppen.',
+    description: 'Lax gruppen planerar en resa till bordershoppen.',
     icon: 'airplane-outline',
     members: ['Hampus Grimskär'],
     id: '1',
@@ -146,10 +150,18 @@ const DATA = [
   {
     title: 'Grupp 3',
     amount: 6990,
-    deschribtion: 'Lax gruppen planerar en resa till Liseberg.',
+    description: 'Lax gruppen planerar en resa till Liseberg.',
     icon: 'american-football-outline',
     members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Tim Larsson'],
     id: '2',
+  },
+  {
+    title: 'Grupp 4',
+    amount: 699,
+    description: 'Lax gruppen planerar en resa till Malmö.',
+    icon: 'restaurant-outline',
+    members: ['Jonathan Skoog', 'Donald Elezi'],
+    id: '3',
   },
 ];
 
@@ -171,7 +183,7 @@ function Member({member}) {
   );
 }
 
-const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
+const GroupCard = ({title, amount, description, members, icon, onPress}) => (
   <TouchableOpacity style={styles.mainView} onPress={onPress}>
     <View
       style={{
@@ -184,7 +196,7 @@ const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
       <Icon name={icon} size={22} color={colors.accent} />
     </View>
 
-    <Text style={styles.deschribtion}>{deschribtion}</Text>
+    <Text style={styles.description}>{description}</Text>
 
     <View style={styles.groupMembers}>
       <FlatList
@@ -212,20 +224,28 @@ const GroupCard = ({title, amount, deschribtion, members, icon, onPress}) => (
 
 function GroupCards() {
   const navigation = useNavigation();
+  const [groups, setGroups] = useState([]);
 
-  const goToGroup = () => {
-    navigation.navigate('HomeScreen');
-  };
+  useEffect(() => {
+    const groupsCollection = collection(FIREBASE_DB, 'tasks');
+    const unsubscribe = onSnapshot(groupsCollection, (snapshot) => {
+      const groupsData = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setGroups(groupsData);
+    });
+
+    return () => unsubscribe();
+
+  }, []);
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={DATA}
+        data={groups}
         renderItem={({item}) => (
           <GroupCard
             title={item.title}
             amount={item.amount}
-            deschribtion={item.deschribtion}
+            description={item.description}
             members={item.members}
             icon={item.icon}
             onPress={() => {

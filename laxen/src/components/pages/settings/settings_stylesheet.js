@@ -3,16 +3,27 @@ import * as colors from "../../modules/colors/colors"
 
 const styles = StyleSheet.create({
     headerContainer: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row',
         backgroundColor: colors.white,
-        height: "10%",
+        height: '8%',
+        width: '100%',
+        paddingLeft: '4%',
+        paddingRight: '4%',
+        borderBottomColor: colors.grey,
+        borderBottomWidth: 1,
+        paddingBottom: '0%',
+        fontFamily: 'poppins',
     },
     headerFont: {
-        color: colors.darkblue,
-        fontSize: 20,
-        fontWeight: "bold"
+        width: 'fit-content',
+        backgroundColor: colors.white,
+        fontFamily: 'poppins',
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: colors.black,
     },
     homeViewContainer: {
         display: "flex",
@@ -35,9 +46,31 @@ const styles = StyleSheet.create({
     settingsView: {
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
         backgroundColor: colors.lightblue,
-        height: "90%"
+        marginLeft: '3%',
+        marginRight: '3%'
+    },
+    settingsListItem: {
+        display: 'flex',
+        height: 90,
+        width: '100%',
+        backgroundColor: colors.white,
+        marginTop: '1%',
+        marginBottom: '1%',
+        borderRadius: 10
+    },
+    settingsListText: {
+        display: 'flex',
+        fontSize: 25,
+        marginTop: 8,
+        marginLeft: 8,
+        fontWeight: '500',
+        color: colors.black
+    },
+    settingsListDesc: {
+        display: 'flex',
+        fontSize: 16,
+        marginLeft: 8.5
     },
     groupsViewContainer: {
         display: "flex",
@@ -79,4 +112,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export {styles};
+export { styles };
