@@ -77,7 +77,8 @@ const DATA = [
         amount: 400,
         date: '20-04-2023',
         creator: 'Hampus Grimskär',
-        deschribtion: 'bussbiljetterna till resan',
+        deschribtion:
+          'bussbiljetterna till resan är dyra så vi måste spara pengar. Betala inom 2 veckor.',
         icon: 'airplane-outline',
         members: ['Hampus Grimskär', 'Ludvig Nilsson'],
         id: '0',
@@ -102,6 +103,36 @@ const DATA = [
         members: ['Hampus Grimskär', 'Ludvig Nilsson'],
         id: '2',
       },
+      {
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '3',
+      },
+      {
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '4',
+      },
+      {
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '5',
+      },
     ],
   },
   {
@@ -119,14 +150,6 @@ const DATA = [
     icon: 'american-football-outline',
     members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Tim Larsson'],
     id: '2',
-  },
-  {
-    title: 'Grupp 4',
-    amount: 699,
-    deschribtion: 'Lax gruppen planerar en resa till Malmö.',
-    icon: 'restaurant-outline',
-    members: ['Jonathan Skoog', 'Donald Elezi'],
-    id: '3',
   },
 ];
 
@@ -214,7 +237,7 @@ function GroupCards() {
                 members: item.members,
                 payments: item.payments,
               });
-            }} // Navigate to the subgroup when clicking it
+            }}
           />
         )}
         keyExtractor={item => item.id}

@@ -3,7 +3,6 @@ import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-// import Payment from '../payment/payment';
 import PaymentFeed from '../payment/payment';
 
 const styles = StyleSheet.create({
@@ -87,19 +86,6 @@ function SubGroup({route, navigation}) {
           />
         </View>
       </View>
-      {/* 
-      <FlatList
-        data={payments}
-        renderItem={({item}) => (
-          <View>
-            {/* Create the list of payments here */}
-      {/* <Text>
-              {item.title} {item.amount}kr
-            </Text>
-          </View>
-        )}
-        keyExtractor={item => item.id}
-        />  */}
 
       <PaymentFeed payments={payments} />
     </View>

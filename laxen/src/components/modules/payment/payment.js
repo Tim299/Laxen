@@ -1,33 +1,31 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Button} from '@rneui/themed';
+import {Tooltip} from 'react-native-elements';
 
 const styles = StyleSheet.create({
   feedContainer: {
     width: '100%',
     height: '100%',
     display: 'flex',
+    flex: 1,
     flexDirection: 'column',
-    // justifyContent: 'center',
     fontFamily: 'poppins',
     padding: '3%',
-    borderWidth: 2,
-    // paddingTop: '10%',
   },
   feedNotification: {
     flex: 1,
-    borderWidth: 1,
     backgroundColor: colors.white,
-    marginTop: '8%',
-    marginBottom: '2%',
+    marginTop: '0%',
+    marginBottom: '5%',
     borderRadius: 10,
     width: '90%',
     height: '55 %',
     padding: '3%',
-    zIndex: 400,
-    // position: 'relative',
-    // elevation: 5,
+    zIndex: 10,
+    margin: 'auto',
   },
   payment: {
     display: 'flex',
@@ -35,49 +33,28 @@ const styles = StyleSheet.create({
     gap: 0,
     alignItems: 'center',
     flexDirection: 'row',
-    borderWidth: 1,
   },
   paymentTitle: {
     color: colors.black,
     fontSize: 20,
     fontWeight: '500',
     marginLeft: '3%',
+    marginTop: '-1%',
   },
   paymentAmount: {
     color: colors.black,
     fontSize: 20,
     fontWeight: '500',
-    // marginLeft: '35%',
   },
   paymentDate: {
-    color: colors.black,
-    fontSize: 10,
+    fontSize: 8,
     marginLeft: 'auto',
-    // justifyContent: 'flex-end',
-    // alignContent: 'flex-end',
-    // alignSelf: 'center',
-    // marginLeft: '7%',
   },
-  //   paymentButton: {
-  //     display: 'flex',
-  //     marginVertical: '20%',
-  //     backgroundColor: colors.lightblue,
-  //     borderRadius: 10,
-  //   },
-  //   paymentButtonText: {
-  //     color: colors.black,
-  //     fontSize: 30,
-  //     fontWeight: '500',
-  //     margin: '5%',
-  //     display: 'flex',
-  //     alignSelf: 'center',
-  //   },
+
   paymentMembers: {
     marginLeft: '0%',
-    // marginBottom: '-6%',
     display: 'flex',
     justifyContent: 'space-between',
-    // position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
@@ -87,8 +64,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 20,
     justifyContent: 'center',
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
     marginRight: 4,
   },
   memberIconText: {
@@ -100,31 +77,25 @@ const styles = StyleSheet.create({
   creatorHeader: {
     backgroundColor: colors.blue,
     borderRadius: 20,
-    borderWidth: 2,
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'top',
-    // alignSelf: 'left',
     aligncontent: 'top',
     marginLeft: '5%',
     width: 'fit-content',
     maxWidth: '100%',
     height: '60%',
-    // marginLeft: '10%',
-    // marginRight: '30%',
+
     marginTop: '-9.5%',
     position: 'absolute',
     zIndex: -100,
     padding: '2%',
-    // paddingTop: '3%',
+
     paddingVertical: '2%',
-    // elevation: 0,
-    // overflow: 'wrap',
   },
   createrHeaderText: {
     color: colors.white,
-    // marginHorizontal: '5%',
     fontSize: 10,
     fontWeight: 'bold',
     fontFamily: 'poppins',
@@ -133,46 +104,49 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontSize: 12,
     fontFamily: 'poppins',
-    borderWidth: 1,
     fontWeight: '500',
     zIndex: 100,
+    marginTop: '1%',
+    marginBottom: '1%',
+  },
+  memberContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  memberText: {
+    fontFamily: 'poppins',
+    marginRight: 4,
+    fontSize: 12,
+  },
+  toolTipBox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+
+    marginLeft: 'auto',
+    marginRight: '-1.5%',
+  },
+  creatorText: {
+    fontFamily: 'poppins',
+    marginRight: 4,
+    fontSize: 12,
+  },
+  btnTitle: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnBox: {
+    backgroundColor: colors.secondary,
+    borderColor: 'transparent',
+    borderRadius: 30,
+    maxHeight: 40,
   },
 });
-
-// const DATA = [
-//   {
-//     title: 'Hotell Casablanca',
-//     amount: 1000,
-//     date: '09-november-2023',
-//     creator: 'Hampus',
-//     members: ['Hampus Grimskär', 'Ludvig Nilsson'],
-//     id: '0',
-//   },
-//   {
-//     title: 'SECOND ITEM',
-//     amount: 482,
-//     date: '09-november-2023',
-//     creator: 'Hampus',
-//     members: ['Hampus'],
-//     id: '1',
-//   },
-//   {
-//     title: 'THIRD ITEM',
-//     amount: 699,
-//     date: '09-november-2023',
-//     creator: 'Hampus',
-//     members: ['Hampus', 'Ludvig', 'Tim'],
-//     id: '2',
-//   },
-//   {
-//     title: 'THIRD ITEM',
-//     amount: 699,
-//     date: '09-november-2023',
-//     creator: 'Hampus',
-//     members: ['Hampus', 'Ludvig'],
-//     id: '3',
-//   },
-// ];
 
 function convertDate(inputFormat) {
   const [day, month, year] = inputFormat.split('-');
@@ -232,33 +206,72 @@ const Payment = ({
   creator,
   deschribtion,
   icon,
-}) => (
-  <View style={styles.feedNotification}>
-    <View style={styles.creatorHeader}>
-      <Text style={styles.createrHeaderText}>
-        {creator} har skapat en aktivitet.
-      </Text>
-    </View>
+}) => {
+  const [isPaymentClicked, setIsPaymentClicked] = useState(false);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
 
-    <View style={styles.payment}>
-      <Icon name={icon} size={22} color={colors.accent} />
-      <Text style={styles.paymentTitle}>{title}</Text>
-      <Text style={styles.paymentDate}>{date}</Text>
-    </View>
+  const handlePaymentClick = () => {
+    setIsPaymentClicked(true);
 
-    <Text style={styles.deschribtion}>{deschribtion}</Text>
+    //lägg swisch här
 
-    <View style={styles.paymentMembers}>
-      <FlatList
-        data={members}
-        renderItem={({item}) => <Member member={item}></Member>}
-        horizontal={true}
-      />
-      {/* <Text style={styles.paymentAmount}>{amount} kr</Text> */}
-      {/* lägg en button för betalning kopplad till swisch här */}
+    setTimeout(() => {
+      setIsPaymentClicked(false);
+    }, 2000);
+  };
+
+  const handleMemberClick = () => {
+    setTooltipVisible(!tooltipVisible);
+  };
+
+  return (
+    <View style={styles.feedNotification}>
+      <View style={styles.payment}>
+        <Icon name={icon} size={20} color={colors.accent} />
+        <Text style={styles.paymentTitle}>{title}</Text>
+        <Text style={styles.paymentDate}>{date}</Text>
+        <View style={styles.toolTipBox}>
+          <Text style={styles.creatorText}>Skapad av:</Text>
+
+          <Tooltip
+            isVisible={tooltipVisible}
+            popover={<Text>{creator}</Text>}
+            backgroundColor={colors.neutral}
+            width={160}
+            height={40}
+            toggleOnPress={true}
+            animationType={'fade'}
+            withOverlay={true}
+            placement={'top'}
+            skipAndroidStatusBar={true}>
+            <Member member={creator} />
+          </Tooltip>
+        </View>
+      </View>
+
+      <Text style={styles.deschribtion}>{deschribtion}</Text>
+
+      <View style={styles.paymentMembers}>
+        <FlatList
+          data={members}
+          renderItem={({item}) => <Member member={item}></Member>}
+          horizontal={true}
+        />
+
+        <Button
+          onPress={handlePaymentClick}
+          title={`Betala ${amount} kr`}
+          titleStyle={styles.btnTitle}
+          buttonStyle={styles.btnBox}
+          containerStyle={{
+            width: 100,
+          }}
+          loading={isPaymentClicked}
+        />
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 function PaymentFeed({payments}) {
   return (
@@ -281,5 +294,4 @@ function PaymentFeed({payments}) {
     </View>
   );
 }
-
 export default PaymentFeed;

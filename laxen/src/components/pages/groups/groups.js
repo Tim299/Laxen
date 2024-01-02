@@ -15,14 +15,13 @@ import * as colors from '../../modules/colors/colors';
 
 import {useNavigation} from '@react-navigation/native';
 
-// import GroupCard from '../../modules/group/group';
 import GroupCards from '../../modules/group/groupcards';
 
 function GroupsScreen() {
   const navigation = useNavigation();
 
   const goToAnotherScreen = () => {
-    navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
+    navigation.navigate('HomeScreen');
   };
 
   return (
