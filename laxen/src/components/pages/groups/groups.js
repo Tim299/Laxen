@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {PropsWithChildren} from 'react';
 import {
   Button,
@@ -14,6 +14,9 @@ import {
 import {styles} from './groups_stylesheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from '../../modules/colors/colors';
+import {UserIdContext} from '../../../App';
+import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
+import {FIREBASE_DB} from '../../../../FirebaseConfig';
 
 import {useNavigation} from '@react-navigation/native';
 
@@ -22,6 +25,47 @@ import GroupCards from '../../modules/group/groupcards';
 
 function GroupsScreen() {
   const navigation = useNavigation();
+  const {currentUserId} = useContext(UserIdContext);
+
+  const handleCreateGroup = () => {
+    navigation.navigate('createGroup', {currentUserId});
+  };
+
+  const [friendData, setFriendData] = useState([]);
+
+  useEffect(() => {
+    const fetchFriendData = async () => {
+      try {
+        const usersRef = collection(FIREBASE_DB, 'users');
+        const currentUserRef = doc(usersRef, currentUserId);
+
+        const currentUserDoc = await getDoc(currentUserRef);
+        if (currentUserDoc.exists()) {
+          const friends = currentUserDoc.data().friends || [];
+          const data = [];
+
+          for (const friendId of friends) {
+            const friendDoc = await getDoc(doc(usersRef, friendId));
+            if (friendDoc.exists()) {
+              const friendInfo = {
+                id: friendId,
+                email: friendDoc.data().email,
+              };
+              data.push(friendInfo);
+            }
+          }
+          setFriendData(data);
+        } else {
+          Alert.alert('Current user document does not exist.');
+        }
+      } catch (error) {
+        console.error('Error fetching friend data:', error);
+        Alert.alert('Error fetching friend data.');
+      }
+    };
+
+    fetchFriendData();
+  }, [currentUserId]);
 
   const goToAnotherScreen = () => {
     navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
@@ -55,7 +99,7 @@ function GroupsScreen() {
           />
         </TouchableOpacity>
         <TouchableOpacity
-                onPress={() => {navigation.navigate("createPayment")}}
+                onPress={handleCreateGroup}
                 style={styles.createPaymentButton}
                 >
                 <Text style={styles.createPaymentButtonText}>Lägg till betalning</Text>
