@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import subGroup from './subgroup';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
-import { addDoc, collection, onSnapshot } from 'firebase/firestore';
+import {addDoc, collection, onSnapshot} from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
@@ -228,19 +228,21 @@ function GroupCards() {
 
   useEffect(() => {
     const groupsCollection = collection(FIREBASE_DB, 'tasks');
-    const unsubscribe = onSnapshot(groupsCollection, (snapshot) => {
-      const groupsData = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    const unsubscribe = onSnapshot(groupsCollection, snapshot => {
+      const groupsData = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
       setGroups(groupsData);
     });
 
     return () => unsubscribe();
-
   }, []);
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={groups}
+        data={DATA} //ändra till db fetch
         renderItem={({item}) => (
           <GroupCard
             title={item.title}
