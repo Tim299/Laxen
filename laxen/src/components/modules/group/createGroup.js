@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, TextInput, View, TouchableOpacity} from "react-native";
 import { StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { collection, doc, setDoc, getDocs } from 'firebase/firestore';
+import { UserIdContext } from '../../../App';
 import { FIREBASE_DB } from '../../../../FirebaseConfig';
 import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list';
 import * as colors from '../../modules/colors/colors';
@@ -94,18 +95,47 @@ const styles = StyleSheet.create({
 
 function CreateGroupForm() {
   const navigation = useNavigation();
+  const currentUserId = useContext(UserIdContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedMember, setSelectedMember] = useState([]);
   const [selectedIcon, setSelectedIcon] = useState("");
   
-  const contacts = [
-    // Get contacts from database to display as members to add to group here
+  const [contacts, setContacts] = useState([]);
 
-    // This is sample data
-    { key: '1', value: 'Hampus Grimskär'},
-    { key: '2', value: 'Ludvig Nilsson'},
-  ]
+  const fetchFriendData = async () => {
+    try {
+      const usersRef = collection(FIREBASE_DB, 'users');
+      const currentUserRef = doc(usersRef, currentUserId);
+
+      const currentUserDoc = await getDoc(currentUserRef);
+      if (currentUserDoc.exists()) {
+        const friends = currentUserDoc.data().friends || [];
+        const data = [];
+
+        for (const friendId of friends) {
+          const friendDoc = await getDoc(doc(usersRef, friendId));
+          if (friendDoc.exists()) {
+            const friendInfo = {
+              id: friendId,
+              email: friendDoc.data().email,
+            };
+            data.push(friendInfo);
+          }
+        }
+        setContacts(data);
+      } else {
+        Alert.alert('Current user document does not exist.');
+      }
+    } catch (error) {
+      console.error('Error fetching friend data:', error);
+      Alert.alert('Error fetching friend data.');
+    }
+  };
+
+  useEffect(() => {
+    fetchFriendData();
+  }, [currentUserId]);
 
   const categories = [
     { key: '1', value: 'Fisk'},

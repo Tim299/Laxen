@@ -54,7 +54,7 @@ function AppStack() {
     </NavigationContainer>
   );
 }
-export const UserIdContext = createContext();
+export const UserIdContext = React.createContext();
 
 function App() {
   const [user, setUser] = useState(null);
