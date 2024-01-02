@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: colors.primary,
     alignSelf: 'center',
+    marginTop: '-14%',
   },
   settingsIcon: {
     width: 30,
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     width: '60%',
     height: '60%',
     backgroundColor: colors.primary,
-    alignSelf: "center",
+    alignSelf: 'center',
     borderRadius: 15,
     elevation: 5,
     alignSelf: 'center',
@@ -131,8 +132,16 @@ const styles = StyleSheet.create({
     fontSize: 26,
     color: colors.black,
     fontWeight: 'bold',
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
+  logo: {
+    width: 30,
+    height: 12,
+    transform: [{rotate: '180deg'}],
+    marginRight: 3,
+    alignContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export {styles};

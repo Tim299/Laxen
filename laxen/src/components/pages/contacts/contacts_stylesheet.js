@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     width: '50%',
     height: '30%',
     backgroundColor: colors.primary,
-    alignSelf: "center",
+    alignSelf: 'center',
     borderRadius: 15,
     elevation: 10,
   },
@@ -47,8 +47,16 @@ const styles = StyleSheet.create({
     fontSize: 26,
     color: colors.secondary,
     fontWeight: 'bold',
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
+  logo: {
+    width: 30,
+    height: 12,
+    transform: [{rotate: '180deg'}],
+    marginRight: 3,
+    alignContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export {styles};
