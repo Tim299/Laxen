@@ -1,6 +1,7 @@
 import React from 'react';
 import {PropsWithChildren} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -8,6 +9,7 @@ import {
   Text,
   useColorScheme,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import {styles} from './groups_stylesheet';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -40,6 +42,29 @@ function GroupsScreen() {
       </View>
       <View>
         <GroupCards></GroupCards>
+      </View>
+      <View style={styles.createButtonsContainer}>
+        <TouchableOpacity
+          onPress={() => {navigation.navigate("createGroup")}}
+          style={styles.createGroupIcon}
+          >
+          <Icon
+            name="add-outline"
+            size={60}
+            color={colors.black}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+                onPress={() => {navigation.navigate("createPayment")}}
+                style={styles.createPaymentButton}
+                >
+                <Text style={styles.createPaymentButtonText}>Lägg till betalning</Text>
+                {/* <Icon
+                    name="add-outline"
+                    size={60}
+                    color={colors.black}
+                /> */}
+          </TouchableOpacity>
       </View>
     </View>
   );

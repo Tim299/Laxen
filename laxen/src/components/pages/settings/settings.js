@@ -14,7 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from '../../modules/colors/colors';
 import { styles } from './settings_stylesheet';
-import { FIREBASE_AUTH } from '../login/FirebaseConfig';
+import { FIREBASE_AUTH } from '../../../../FirebaseConfig';
 
 import { useNavigation } from '@react-navigation/native';
 import { subSetting } from '../../modules/settings/subsetting';

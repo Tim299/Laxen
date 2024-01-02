@@ -1,7 +1,6 @@
-import React from 'react';
-import { PropsWithChildren } from 'react';
+import * as React from 'react';
+import {PropsWithChildren} from 'react';
 import {
-  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -9,55 +8,43 @@ import {
   Text,
   useColorScheme,
   View,
-  FlatList,
+  TouchableOpacity,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import * as colors from '../../modules/colors/colors';
-import { styles } from './contacts_stylesheet';
-import { FIREBASE_AUTH } from '../login/FirebaseConfig';
+import {styles} from './contacts_stylesheet';
+import PaymentFeed from '../../modules/payment/payment';
+import {Header, Button} from 'react-native-elements';
+import {IconButton, MD3Colors} from 'react-native-elements';
 
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import * as colors from '../../modules/colors/colors';
+import CreateContacts from './createContact';
 import { useNavigation } from '@react-navigation/native';
 
-const DATA = [
-  {
-    id: '1',
-    name: '',
-  },
-  {
-    id: '2',
-    name: '',
-  },
-  {
-    id: '3',
-    name: '',
-  },
-];
-
 function ContactsScreen() {
-  const navigation = useNavigation();
-
-  const goToAnotherScreen = () => {
-    navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
-  };
-
-  return (
-    <View style={styles.contactsViewContainer}>
-      <View style={styles.headerContainer}>
-        <Text h1 style={styles.headerFont} onPress={goToAnotherScreen}>
-          CONTACTS
+    const navigation = useNavigation();
+    return (
+      <View style={styles.contactsViewContainer}>
+        <View style={styles.headerContainer}>
+        <Text h1 style={styles.headerFont}>
+          Kontakter
         </Text>
-        <Icon
-          name="fish-outline"
-          size={30}
-          color={colors.black}
-          onPress={goToAnotherScreen}
-        />
+        </View>
+        <View>
+            <TouchableOpacity
+                onPress={() => {navigation.navigate("createContact")}}
+                style={styles.createContactButton}
+                >
+                <Text style={styles.createContactButtonText}>Lägg till</Text>
+                {/* <Icon
+                    name="add-outline"
+                    size={60}
+                    color={colors.black}
+                /> */}
+            </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.contactsView}>
-        <Text>Contacts</Text>
-      </View>
-    </View>
-  );
-}
+    );
+  }
 
 export default ContactsScreen;
