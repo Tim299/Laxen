@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from '../../modules/colors/colors';
@@ -15,7 +16,7 @@ import {collection, doc, setDoc, getDocs, updateDoc} from 'firebase/firestore';
 
 import {useNavigation} from '@react-navigation/native';
 import {subSetting} from '../../modules/settings/subsetting';
-import {getAuth, onAuthStateChanged} from 'firebase/auth';
+import {getAuth, onAuthStateChanged, updateCurrentUser} from 'firebase/auth';
 
 const DATA = [
   {
@@ -55,6 +56,10 @@ function SettingsScreen() {
     navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
   };
 
+  const goToSubSetting = () => {
+    navigation.navigate('subsetting');
+  }
+
   useEffect(() => {
     const auth = FIREBASE_AUTH;
     onAuthStateChanged(auth, user => {
@@ -80,17 +85,6 @@ function SettingsScreen() {
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [userName, setUserName] = useState('');
-
-  const handleNumberChange = () => {
-    console.log("\nNumber: " + phoneNumber);
-  }
-
-  const handleUserChange = () => {
-    console.log("\nUsername: " + userName);
-  }
-  const handleUserChange = newUser => {
-    setUserName(newUser);
-  };
 
   const updatePhoneNumber = async () => {
     try {
@@ -142,7 +136,7 @@ function SettingsScreen() {
           <TextInput
             value={userName}
             onChangeText={setUserName}
-            onEndEditing={handleUserChange}
+            onEndEditing={updatUserName}
             placeholder="Ange användarnamn..."
             style={{
               fontSize: 14,
@@ -172,7 +166,7 @@ function SettingsScreen() {
             keyboardType="numeric"
             value={phoneNumber}
             onChangeText={setPhoneNumber}
-            onEndEditing={handleNumberChange}
+            onEndEditing={updatePhoneNumber}
             placeholder="Ange telefonnummer..."
             style={{
               fontSize: 14,
