@@ -78,13 +78,13 @@ const DATA = [
     payments: [
       {
         title: 'Bussbiljetter',
-        amount: 400,
+        amount: 500000,
         date: '20-04-2023',
         creator: 'Hampus Grimskär',
         deschribtion:
           'bussbiljetterna till resan är dyra så vi måste spara pengar. Betala inom 2 veckor.',
         icon: 'airplane-outline',
-        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Jonathan Skoog'],
         id: '0',
         isPayed: false,
       },
@@ -224,7 +224,7 @@ const GroupCard = ({title, amount, description, members, icon, onPress}) => (
         renderItem={({item}) => <Member member={item}></Member>}
         horizontal={true}
       />
-      <View
+      {/* <View
         style={{
           backgroundColor: colors.secondary,
           width: '20%',
@@ -237,7 +237,7 @@ const GroupCard = ({title, amount, description, members, icon, onPress}) => (
           fontFamily: 'poppins',
         }}>
         <Text style={styles.paymentAmount}>{amount} kr</Text>
-      </View>
+      </View> */}
     </View>
   </TouchableOpacity>
 );

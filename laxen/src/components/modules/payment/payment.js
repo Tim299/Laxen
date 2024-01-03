@@ -213,10 +213,10 @@ const Payment = ({
   const [isPaymentClicked, setIsPaymentClicked] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
-  console.log(paymentMembers, 'paymentMembers');
-  console.log(groupID, 'groupID');
-  console.log(paymentID, 'paymentID');
-  console.log(isPayed, 'isPayed');
+  //   console.log(paymentMembers, 'paymentMembers');
+  //   console.log(groupID, 'groupID');
+  //   console.log(paymentID, 'paymentID');
+  //   console.log(isPayed, 'isPayed');
 
   const handlePaymentClick = () => {
     setIsPaymentClicked(true);
@@ -278,11 +278,11 @@ const Payment = ({
 
         <Button
           onPress={handlePaymentClick}
-          title={`Betala ${amount} kr`}
+          title={`Betala ${(amount / members.length).toFixed(1)} kr`}
           titleStyle={styles.btnTitle}
           buttonStyle={styles.btnBox}
           containerStyle={{
-            width: 100,
+            width: 140,
           }}
           loading={isPaymentClicked}
           disabled={isPaymentClicked}
