@@ -75,13 +75,10 @@ function SettingsScreen() {
   const [userName, setUserName] = useState('');
 
   const handleNumberChange = (newNumber) => {
-    const numericText = newNumber.replace(/[^0-9]/g, '');
-    setPhoneNumber(numericText);
     console.log("\nNumber: " + phoneNumber);
   }
 
   const handleUserChange = (newUser) => {
-    setUserName(newUser);
     console.log("\nUsername: " + userName);
   }
 
@@ -107,7 +104,8 @@ function SettingsScreen() {
           <Text h2 style={styles.settingsListText}>Användarnamn</Text>
           <TextInput
             value={userName}
-            onChangeText={handleUserChange}
+            onChangeText={setUserName}
+            onEndEditing={handleUserChange}
             placeholder="Ange användarnamn..."
             style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
           />
@@ -126,7 +124,8 @@ function SettingsScreen() {
           <TextInput
             keyboardType='numeric'
             value={phoneNumber}
-            onChangeText={handleNumberChange}
+            onChangeText={setPhoneNumber}
+            onEndEditing={handleNumberChange}
             placeholder="Ange telefonnummer..."
             style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
           />
