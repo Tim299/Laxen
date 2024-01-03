@@ -29,6 +29,7 @@ import Login from './components/pages/login/login';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import CreatePaymentForm from './components/modules/payment/createPayment';
 import CreateContact from './components/pages/contacts/createContact';
+import SubSetting from './components/modules/settings/subsetting'
 
 const stack = createStackNavigator();
 const tabs = createMaterialTopTabNavigator();
@@ -50,6 +51,8 @@ function AppStack() {
         <stack.Screen name="createPayment" component={CreatePaymentForm} />
 
         <stack.Screen name="createContact" component={CreateContact} />
+
+        <stack.Screen name="subsetting" component={SubSetting} />
       </stack.Navigator>
     </NavigationContainer>
   );

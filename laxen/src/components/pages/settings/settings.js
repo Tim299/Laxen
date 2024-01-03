@@ -1,16 +1,9 @@
 import React, { useState } from 'react';
-import { PropsWithChildren } from 'react';
 import {
   Button,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
   TextInput,
-  useColorScheme,
   View,
-  FlatList,
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -19,37 +12,7 @@ import { styles } from './settings_stylesheet';
 import { FIREBASE_AUTH } from '../../../../FirebaseConfig';
 
 import { useNavigation } from '@react-navigation/native';
-import { subSetting } from '../../modules/settings/subsetting';
-
-const DATA = [
-  {
-    id: '1',
-    title: 'About the App',
-    description: 'Version, license',
-    icon: 'information-circle-outline',
-  },
-];
-
-const ListItem = ({ title, description, icon }) => (
-  <View style={styles.settingsListItem}>
-    <View style={{ width: '80%', flex: 1 }}>
-      <Text style={styles.settingsListText}>{title}</Text>
-      <Text style={styles.settingsListDesc}>{description}</Text>
-    </View>
-    <Icon
-      style={{
-        flex: 1,
-        marginLeft: '85%',
-        marginRight: 'auto',
-        marginTop: '-10%',
-        marginBottom: 'auto',
-      }}
-      name={icon}
-      size={30}
-      color={colors.black}
-    />
-  </View>
-);
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function SettingsScreen() {
   const navigation = useNavigation();
@@ -58,27 +21,18 @@ function SettingsScreen() {
     navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
   };
 
-  const settingItem = ({ item }) => (
-    <ListItem
-      title={item.title}
-      description={item.description}
-      icon={item.icon}
-      onPress={() => {
-        navigation.navigate('SubSetting', {
-          settingID: item.id,
-        });
-      }}
-    />
-  );
+  const goToSubSetting = () => {
+    navigation.navigate('subsetting');
+  }
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [userName, setUserName] = useState('');
 
-  const handleNumberChange = (newNumber) => {
+  const handleNumberChange = () => {
     console.log("\nNumber: " + phoneNumber);
   }
 
-  const handleUserChange = (newUser) => {
+  const handleUserChange = () => {
     console.log("\nUsername: " + userName);
   }
 
@@ -107,8 +61,15 @@ function SettingsScreen() {
             onChangeText={setUserName}
             onEndEditing={handleUserChange}
             placeholder="Ange användarnamn..."
-            style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
-          />
+            style={{
+              fontSize: 14,
+              marginLeft: 6,
+              marginBottom: 8,
+              borderWidth: 1,
+              borderColor: 'lightgray',
+              borderRadius: 10,
+              marginRight: 6 
+            }}/>
         </View>
         <View style={{
           display: 'flex',
@@ -127,14 +88,36 @@ function SettingsScreen() {
             onChangeText={setPhoneNumber}
             onEndEditing={handleNumberChange}
             placeholder="Ange telefonnummer..."
-            style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
-          />
+            style={{
+              fontSize: 14,
+              marginLeft: 6,
+              marginBottom: 8,
+              borderWidth: 1,
+              borderColor: 'lightgray',
+              borderRadius: 10,
+              marginRight: 6 
+            }}/>
         </View>
-        <FlatList
-          data={DATA}
-          keyExtractor={item => item.id}
-          renderItem={settingItem}
-        />
+        <TouchableOpacity onPress={goToSubSetting}>
+          <View style={styles.settingsListItem}>
+            <View style={{ width: '80%', flex: 1 }}>
+              <Text style={styles.settingsListText}>Om appen</Text>
+              <Text style={styles.settingsListDesc}>Verion, licenser</Text>
+            </View>
+            <Icon
+              style={{
+                flex: 1,
+                marginLeft: '85%',
+                marginRight: 'auto',
+                marginTop: '-10%',
+                marginBottom: 'auto',
+              }}
+              name='information-circle-outline'
+              size={30}
+              color={colors.black}
+            />
+          </View>
+        </TouchableOpacity>
         <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logga ut" />
       </View>
     </View>
