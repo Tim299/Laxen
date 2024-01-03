@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import subGroup from './subgroup';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import {collection, query, where, onSnapshot} from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
@@ -245,12 +245,13 @@ const GroupCard = ({title, amount, description, members, icon, onPress}) => (
 function GroupCards({userid}) {
   const navigation = useNavigation();
   const [groups, setGroups] = useState([]);
-  console.log("is this the correct id?",userid)
   useEffect(() => {
-  
     const groupsCollection = collection(FIREBASE_DB, 'Group');
-    const queryByUserId = query(groupsCollection, where('userIds', 'array-contains', userid));
-  
+    const queryByUserId = query(
+      groupsCollection,
+      where('userIds', 'array-contains', userid),
+    );
+
     const unsubscribe = onSnapshot(queryByUserId, snapshot => {
       const groupsData = snapshot.docs.map(doc => ({
         ...doc.data(),
@@ -258,10 +259,9 @@ function GroupCards({userid}) {
       }));
       setGroups(groupsData);
     });
-  
+
     return () => unsubscribe();
   }, []);
-  console.log("hello",groups)
 
   return (
     <View style={styles.container}>
@@ -276,7 +276,6 @@ function GroupCards({userid}) {
             onPress={() => {
               navigation.navigate('subgroup', {
                 groupID: item.title,
-            
               });
             }}
           />
