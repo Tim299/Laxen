@@ -84,18 +84,29 @@ function CreateContact({route}) {
       if (!querySnapshot.empty) {
         const friendDoc = querySnapshot.docs[0];
         const friendId = friendDoc.id;
-
+       
         const currentUserRef = doc(usersRef, currentUserId);
         const currentUserDoc = await getDoc(currentUserRef);
 
+        const updatedFriend = {
+          uid: friendId,
+          email: friendEmail,
+        };
+
         if (currentUserDoc.exists()) {
-          const friends = currentUserDoc.data().friends || [];
-          const updatedFriends = [...friends, friendId];
+          const currentUserData = currentUserDoc.data();
+          const currentUserFriends = currentUserData.friends || [];
 
-          await updateDoc(currentUserRef, {
-            friends: updatedFriends,
-          });
+          const existingFriendIndex = currentUserFriends.findIndex(friend => friend.uid === friendId);
 
+          if (existingFriendIndex === -1) {
+            // Push the updatedFriend object into the friends array
+            const updatedFriends = [...currentUserFriends, updatedFriend];
+        
+            await updateDoc(currentUserRef, {
+              friends: updatedFriends,
+            });
+          }
           Alert.alert('Friend added successfully!');
         } else {
           Alert.alert('Current user document does not exist.');
