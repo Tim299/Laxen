@@ -5,12 +5,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import subGroup from './subgroup';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
-import { addDoc, collection, onSnapshot } from 'firebase/firestore';
+import {addDoc, collection, onSnapshot} from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '85%',
+    height: '90%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -73,30 +73,77 @@ const DATA = [
     amount: 1000,
     description: 'Lax gruppen planerar en resa till Skåne.',
     icon: 'fish-outline',
-    members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+    members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Tim Larsson'],
     id: '0',
     payments: [
       {
-          title: "Bussbiljetter",
-          amount: 400,
-          date: "20-04-2023",
-          creator: "Hampus Grimskär",
-          description: "bussbiljetterna till resan",
-          icon: "airplane-outline",
-          members: ["Hampus Grimskär", "Ludvig Nilsson"],
-          id: "0",
+        title: 'Bussbiljetter',
+        amount: 500000,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion:
+          'bussbiljetterna till resan är dyra så vi måste spara pengar. Betala inom 2 veckor.',
+        icon: 'airplane-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Jonathan Skoog'],
+        id: '0',
+        isPayed: false,
       },
       {
-          title: "Lunch",
-          amount: 299,
-          date: "20-04-2023",
-          creator: "Hampus Grimskär",
-          description: "Lunch på resan",
-          icon: "restaurant-outline",
-          members: ["Hampus Grimskär", "Ludvig Nilsson"],
-          id: "1",
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '1',
+        isPayed: false,
       },
-    ]
+      {
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '2',
+        isPayed: false,
+      },
+      {
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '3',
+        isPayed: false,
+      },
+      {
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '4',
+        isPayed: false,
+      },
+      {
+        title: 'Lunch',
+        amount: 299,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion: 'Lunch på resan',
+        icon: 'restaurant-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        id: '5',
+        isPayed: false,
+      },
+    ],
   },
   {
     title: 'Grupp 2',
@@ -105,6 +152,20 @@ const DATA = [
     icon: 'airplane-outline',
     members: ['Hampus Grimskär'],
     id: '1',
+    payments: [
+      {
+        title: 'Bussbiljetter',
+        amount: 400,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion:
+          'bussbiljetterna till resan är dyra så vi måste spara pengar. Betala inom 2 veckor.',
+        icon: 'airplane-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Jonathan Skoog'],
+        id: '0',
+        isPayed: false,
+      },
+    ],
   },
   {
     title: 'Grupp 3',
@@ -163,7 +224,7 @@ const GroupCard = ({title, amount, description, members, icon, onPress}) => (
         renderItem={({item}) => <Member member={item}></Member>}
         horizontal={true}
       />
-      <View
+      {/* <View
         style={{
           backgroundColor: colors.secondary,
           width: '20%',
@@ -176,7 +237,7 @@ const GroupCard = ({title, amount, description, members, icon, onPress}) => (
           fontFamily: 'poppins',
         }}>
         <Text style={styles.paymentAmount}>{amount} kr</Text>
-      </View>
+      </View> */}
     </View>
   </TouchableOpacity>
 );
@@ -187,19 +248,21 @@ function GroupCards() {
 
   useEffect(() => {
     const groupsCollection = collection(FIREBASE_DB, 'tasks');
-    const unsubscribe = onSnapshot(groupsCollection, (snapshot) => {
-      const groupsData = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    const unsubscribe = onSnapshot(groupsCollection, snapshot => {
+      const groupsData = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
       setGroups(groupsData);
     });
 
     return () => unsubscribe();
-
   }, []);
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={groups}
+        data={DATA} //ändra till db fetch
         renderItem={({item}) => (
           <GroupCard
             title={item.title}
@@ -207,14 +270,18 @@ function GroupCards() {
             description={item.description}
             members={item.members}
             icon={item.icon}
-            onPress={() => { navigation.navigate('subgroup', {
-              groupID: item.id,
-              title: item.title,
-              amount: item.amount,
-              description: item.description,
-              members: item.members,
-              payments: item.payments,
-            }); }}
+            onPress={() => {
+              navigation.navigate('subgroup', {
+                groupID: item.id,
+                title: item.title,
+                amount: item.amount,
+                description: item.deschribtion,
+                members: item.members,
+                payments: item.payments,
+                isPayed: item.isPayed,
+                paymentID: item.payments.id,
+              });
+            }}
           />
         )}
         keyExtractor={item => item.id}

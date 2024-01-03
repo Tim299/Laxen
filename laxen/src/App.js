@@ -66,6 +66,16 @@ function App() {
     });
   }, []);
 
+  const auth = FIREBASE_AUTH;
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const uid = user.uid;
+    setCurrentUserId(uid)
+  } else {
+    // No user is signed in
+    // Handle this scenario if needed
+  }
+});
   return (
     <UserIdContext.Provider value={{currentUserId, setCurrentUserId}}>
       {user ? (

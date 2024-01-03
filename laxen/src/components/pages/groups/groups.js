@@ -10,6 +10,7 @@ import {
   useColorScheme,
   View,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {styles} from './groups_stylesheet';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -20,7 +21,6 @@ import {FIREBASE_DB} from '../../../../FirebaseConfig';
 
 import {useNavigation} from '@react-navigation/native';
 
-// import GroupCard from '../../modules/group/group';
 import GroupCards from '../../modules/group/groupcards';
 
 function GroupsScreen() {
@@ -68,7 +68,7 @@ function GroupsScreen() {
   }, [currentUserId]);
 
   const goToAnotherScreen = () => {
-    navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
+    navigation.navigate('HomeScreen');
   };
 
   return (
@@ -77,12 +77,7 @@ function GroupsScreen() {
         <Text h1 style={styles.headerFont} onPress={goToAnotherScreen}>
           GRUPPER
         </Text>
-        <Icon
-          name="fish-outline"
-          size={30}
-          color={colors.black}
-          onPress={goToAnotherScreen}
-        />
+        <Image source={require('../login/fish.png')} style={styles.logo} />
       </View>
       <View>
         <GroupCards></GroupCards>
