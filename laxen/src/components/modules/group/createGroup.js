@@ -184,9 +184,7 @@ function CreateGroup({route}) {
         amount: 0,
         description,
         members: [
-          // Include current user ID and email in the members array
           {id: currentUserId, email: currentUserEmail},
-          // Include other friends fetched from rawFriendData
           ...rawFriendData,
         ],
         id: (currentHighestID + 1).toString(),
