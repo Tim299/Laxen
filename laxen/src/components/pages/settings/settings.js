@@ -72,11 +72,17 @@ function SettingsScreen() {
   );
 
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [userName, setUserName] = useState('');
 
   const handleNumberChange = (newNumber) => {
     const numericText = newNumber.replace(/[^0-9]/g, '');
     setPhoneNumber(numericText);
     console.log("\nNumber: " + phoneNumber);
+  }
+
+  const handleUserChange = (newUser) => {
+    setUserName(newUser);
+    console.log("\nUsername: " + userName);
   }
 
   return (
@@ -98,12 +104,30 @@ function SettingsScreen() {
           elevation: 3,
           fontFamily: 'poppins',
         }}>
-          <Text h2 style={styles.settingsListText}>Phone number</Text>
+          <Text h2 style={styles.settingsListText}>Användarnamn</Text>
+          <TextInput
+            value={userName}
+            onChangeText={handleUserChange}
+            placeholder="Ange användarnamn..."
+            style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
+          />
+        </View>
+        <View style={{
+          display: 'flex',
+          height: 100,
+          width: '100%',
+          backgroundColor: colors.white,
+          marginBottom: '2%',
+          borderRadius: 10,
+          elevation: 3,
+          fontFamily: 'poppins',
+        }}>
+          <Text h2 style={styles.settingsListText}>Telefonnummer</Text>
           <TextInput
             keyboardType='numeric'
             value={phoneNumber}
             onChangeText={handleNumberChange}
-            placeholder="Enter phone number..."
+            placeholder="Ange telefonnummer..."
             style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
           />
         </View>
@@ -112,7 +136,7 @@ function SettingsScreen() {
           keyExtractor={item => item.id}
           renderItem={settingItem}
         />
-        <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
+        <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logga ut" />
       </View>
     </View>
   );
