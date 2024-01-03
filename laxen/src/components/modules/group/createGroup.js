@@ -3,10 +3,18 @@ import {Text, TextInput, View, TouchableOpacity} from 'react-native';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-import {collection, doc, setDoc, getDocs, getDoc} from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  setDoc,
+  getDocs,
+  getDoc,
+  getUser,
+} from 'firebase/firestore';
+import {getAuth, onAuthStateChanged} from 'firebase/auth';
 
 import {UserIdContext} from '../../../App';
-import {FIREBASE_DB} from '../../../../FirebaseConfig';
+import {FIREBASE_DB, FIREBASE_AUTH} from '../../../../FirebaseConfig';
 import {
   SelectList,
   MultipleSelectList,
@@ -105,6 +113,7 @@ function CreateGroup({route}) {
   const [selectedIcon, setSelectedIcon] = useState('');
   const [friendData, setFriendData] = useState([]);
   const [rawFriendData, setRawFriendData] = useState([]);
+  const [currentUserEmail, setCurrentUserEmail] = useState('');
 
   const [currentUserId, setCurrentUserId] = useState(null);
 
@@ -150,6 +159,16 @@ function CreateGroup({route}) {
         Alert.alert('Error fetching friend data.');
       }
     };
+
+    const auth = FIREBASE_AUTH;
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        const uid = user.email;
+        setCurrentUserEmail(uid);
+      } else {
+      }
+    });
+
     if (currentUserId) {
       fetchFriendData();
     }
@@ -164,7 +183,12 @@ function CreateGroup({route}) {
         title,
         amount: 0,
         description,
-        members: rawFriendData,
+        members: [
+          // Include current user ID and email in the members array
+          {id: currentUserId, email: currentUserEmail},
+          // Include other friends fetched from rawFriendData
+          ...rawFriendData,
+        ],
         id: (currentHighestID + 1).toString(),
       };
 
