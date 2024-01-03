@@ -70,7 +70,7 @@ function App() {
 onAuthStateChanged(auth, (user) => {
   if (user) {
     const uid = user.uid;
-    console.log(uid);
+    setCurrentUserId(uid)
   } else {
     // No user is signed in
     // Handle this scenario if needed

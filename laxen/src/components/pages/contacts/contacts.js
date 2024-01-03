@@ -16,6 +16,7 @@ function ContactsScreen() {
   };
 
   useEffect(() => {
+    
     const fetchFriendData = async () => {
       try {
         const usersRef = collection(FIREBASE_DB, 'users');
@@ -45,8 +46,9 @@ function ContactsScreen() {
         Alert.alert('Error fetching friend data.');
       }
     };
-
-    fetchFriendData();
+    if (currentUserId) {
+      fetchFriendData();
+    }
   }, [currentUserId]);
 
   const renderFriendCard = ({item}) => (
