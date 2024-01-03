@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from '@rneui/themed';
 import {Tooltip} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
+import openSwish from '../swish/swish';
 
 const styles = StyleSheet.create({
   feedContainer: {
@@ -221,11 +222,23 @@ const Payment = ({
   const handlePaymentClick = () => {
     setIsPaymentClicked(true);
 
+    const payload = {
+      version: 1,
+      payee: {
+        // need to get this from database
+        value: "+46701111111"
+      },
+      amount: {
+        value: (amount / members.length).toFixed(1)
+      },
+      message: {
+        value: deschribtion,
+        editable: false
+      }
+    };
+    
     //lägg swisch här
-
-    // setTimeout(() => {
-    //   setIsPaymentClicked(false);
-    // }, 2000);
+    openSwish(payload);
   };
 
   return (

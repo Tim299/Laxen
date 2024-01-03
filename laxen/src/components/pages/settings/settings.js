@@ -1,5 +1,5 @@
-import React from 'react';
-import {PropsWithChildren} from 'react';
+import React, { useState } from 'react';
+import { PropsWithChildren } from 'react';
 import {
   Button,
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
   View,
   FlatList,
@@ -14,42 +15,24 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from '../../modules/colors/colors';
-import {styles} from './settings_stylesheet';
-import {FIREBASE_AUTH} from '../../../../FirebaseConfig';
+import { styles } from './settings_stylesheet';
+import { FIREBASE_AUTH } from '../../../../FirebaseConfig';
 
-import {useNavigation} from '@react-navigation/native';
-import {subSetting} from '../../modules/settings/subsetting';
+import { useNavigation } from '@react-navigation/native';
+import { subSetting } from '../../modules/settings/subsetting';
 
 const DATA = [
   {
     id: '1',
-    title: 'General Settings',
-    description: 'Appearance, language',
-    icon: 'settings-outline',
-  },
-  {
-    id: '2',
-    title: 'Group Settings',
-    description: 'Notifications, history',
-    icon: 'people-outline',
-  },
-  {
-    id: '3',
-    title: 'Account Settings',
-    description: 'Email, password, profile picture',
-    icon: 'person-circle-outline',
-  },
-  {
-    id: '4',
     title: 'About the App',
     description: 'Version, license',
     icon: 'information-circle-outline',
   },
 ];
 
-const ListItem = ({title, description, icon}) => (
+const ListItem = ({ title, description, icon }) => (
   <View style={styles.settingsListItem}>
-    <View style={{width: '80%', flex: 1}}>
+    <View style={{ width: '80%', flex: 1 }}>
       <Text style={styles.settingsListText}>{title}</Text>
       <Text style={styles.settingsListDesc}>{description}</Text>
     </View>
@@ -75,7 +58,7 @@ function SettingsScreen() {
     navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
   };
 
-  const settingItem = ({item}) => (
+  const settingItem = ({ item }) => (
     <ListItem
       title={item.title}
       description={item.description}
@@ -87,6 +70,21 @@ function SettingsScreen() {
       }}
     />
   );
+
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [userName, setUserName] = useState('');
+
+  const handleNumberChange = (newNumber) => {
+    const numericText = newNumber.replace(/[^0-9]/g, '');
+    setPhoneNumber(numericText);
+    console.log("\nNumber: " + phoneNumber);
+  }
+
+  const handleUserChange = (newUser) => {
+    setUserName(newUser);
+    console.log("\nUsername: " + userName);
+  }
+
   return (
     <View style={styles.settingsViewContainer}>
       <View style={styles.headerContainer}>
@@ -96,12 +94,49 @@ function SettingsScreen() {
         <Image source={require('../login/fish.png')} style={styles.logo} />
       </View>
       <View style={styles.settingsView}>
+        <View style={{
+          display: 'flex',
+          height: 100,
+          width: '100%',
+          backgroundColor: colors.white,
+          marginBottom: '2%',
+          borderRadius: 10,
+          elevation: 3,
+          fontFamily: 'poppins',
+        }}>
+          <Text h2 style={styles.settingsListText}>Användarnamn</Text>
+          <TextInput
+            value={userName}
+            onChangeText={handleUserChange}
+            placeholder="Ange användarnamn..."
+            style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
+          />
+        </View>
+        <View style={{
+          display: 'flex',
+          height: 100,
+          width: '100%',
+          backgroundColor: colors.white,
+          marginBottom: '2%',
+          borderRadius: 10,
+          elevation: 3,
+          fontFamily: 'poppins',
+        }}>
+          <Text h2 style={styles.settingsListText}>Telefonnummer</Text>
+          <TextInput
+            keyboardType='numeric'
+            value={phoneNumber}
+            onChangeText={handleNumberChange}
+            placeholder="Ange telefonnummer..."
+            style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
+          />
+        </View>
         <FlatList
           data={DATA}
           keyExtractor={item => item.id}
           renderItem={settingItem}
         />
-        <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
+        <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logga ut" />
       </View>
     </View>
   );
