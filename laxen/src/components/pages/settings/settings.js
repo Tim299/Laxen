@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { PropsWithChildren } from 'react';
+import React, {useState, useEffect} from 'react';
+import {PropsWithChildren} from 'react';
 import {
   Button,
   SafeAreaView,
@@ -15,11 +15,13 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from '../../modules/colors/colors';
-import { styles } from './settings_stylesheet';
-import { FIREBASE_AUTH } from '../../../../FirebaseConfig';
+import {styles} from './settings_stylesheet';
+import {FIREBASE_AUTH, FIREBASE_DB} from '../../../../FirebaseConfig';
+import {collection, doc, setDoc, getDocs, updateDoc} from 'firebase/firestore';
 
-import { useNavigation } from '@react-navigation/native';
-import { subSetting } from '../../modules/settings/subsetting';
+import {useNavigation} from '@react-navigation/native';
+import {subSetting} from '../../modules/settings/subsetting';
+import {getAuth, onAuthStateChanged} from 'firebase/auth';
 
 const DATA = [
   {
@@ -30,9 +32,9 @@ const DATA = [
   },
 ];
 
-const ListItem = ({ title, description, icon }) => (
+const ListItem = ({title, description, icon}) => (
   <View style={styles.settingsListItem}>
-    <View style={{ width: '80%', flex: 1 }}>
+    <View style={{width: '80%', flex: 1}}>
       <Text style={styles.settingsListText}>{title}</Text>
       <Text style={styles.settingsListDesc}>{description}</Text>
     </View>
@@ -53,12 +55,23 @@ const ListItem = ({ title, description, icon }) => (
 
 function SettingsScreen() {
   const navigation = useNavigation();
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   const goToAnotherScreen = () => {
     navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
   };
 
-  const settingItem = ({ item }) => (
+  useEffect(() => {
+    const auth = FIREBASE_AUTH;
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        const uid = user.uid;
+        setCurrentUserId(uid);
+      }
+    });
+  }, []);
+
+  const settingItem = ({item}) => (
     <ListItem
       title={item.title}
       description={item.description}
@@ -74,16 +87,38 @@ function SettingsScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [userName, setUserName] = useState('');
 
-  const handleNumberChange = (newNumber) => {
+  const handleNumberChange = newNumber => {
     const numericText = newNumber.replace(/[^0-9]/g, '');
     setPhoneNumber(numericText);
-    console.log("\nNumber: " + phoneNumber);
-  }
+  };
 
-  const handleUserChange = (newUser) => {
+  const handleUserChange = newUser => {
     setUserName(newUser);
-    console.log("\nUsername: " + userName);
-  }
+  };
+
+  const updatePhoneNumber = async () => {
+    try {
+      const userRef = doc(collection(FIREBASE_DB, 'users'), currentUserId);
+
+      await updateDoc(userRef, {
+        phoneNumber: phoneNumber,
+      });
+    } catch (error) {
+      console.error('Error updating phone number:', error);
+    }
+  };
+
+  const updatUserName = async () => {
+    try {
+      const userRef = doc(collection(FIREBASE_DB, 'users'), currentUserId);
+
+      await updateDoc(userRef, {
+        username: userName,
+      });
+    } catch (error) {
+      console.error('Error updating phone number:', error);
+    }
+  };
 
   return (
     <View style={styles.settingsViewContainer}>
@@ -94,41 +129,65 @@ function SettingsScreen() {
         <Image source={require('../login/fish.png')} style={styles.logo} />
       </View>
       <View style={styles.settingsView}>
-        <View style={{
-          display: 'flex',
-          height: 100,
-          width: '100%',
-          backgroundColor: colors.white,
-          marginBottom: '2%',
-          borderRadius: 10,
-          elevation: 3,
-          fontFamily: 'poppins',
-        }}>
-          <Text h2 style={styles.settingsListText}>Användarnamn</Text>
+        <View
+          style={{
+            display: 'flex',
+            height: 100,
+            width: '100%',
+            backgroundColor: colors.white,
+            marginBottom: '2%',
+            borderRadius: 10,
+            elevation: 3,
+            fontFamily: 'poppins',
+          }}>
+          <Text h2 style={styles.settingsListText}>
+            Användarnamn
+          </Text>
           <TextInput
             value={userName}
             onChangeText={handleUserChange}
+            onSubmitEditing={updatUserName}
             placeholder="Ange användarnamn..."
-            style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
+            style={{
+              fontSize: 14,
+              marginLeft: 6,
+              marginBottom: 8,
+              borderWidth: 1,
+              borderColor: 'lightgray',
+              borderRadius: 10,
+              marginRight: 6,
+            }}
           />
         </View>
-        <View style={{
-          display: 'flex',
-          height: 100,
-          width: '100%',
-          backgroundColor: colors.white,
-          marginBottom: '2%',
-          borderRadius: 10,
-          elevation: 3,
-          fontFamily: 'poppins',
-        }}>
-          <Text h2 style={styles.settingsListText}>Telefonnummer</Text>
+        <View
+          style={{
+            display: 'flex',
+            height: 100,
+            width: '100%',
+            backgroundColor: colors.white,
+            marginBottom: '2%',
+            borderRadius: 10,
+            elevation: 3,
+            fontFamily: 'poppins',
+          }}>
+          <Text h2 style={styles.settingsListText}>
+            Telefonnummer
+          </Text>
           <TextInput
-            keyboardType='numeric'
+            keyboardType="numeric"
             value={phoneNumber}
+            onSubmitEditing={updatePhoneNumber}
             onChangeText={handleNumberChange}
             placeholder="Ange telefonnummer..."
-            style={{ fontSize: 14, marginLeft: 6, marginBottom: 8, borderWidth: 1, borderColor: 'lightgray', borderRadius: 10, marginRight: 6 }}
+            style={{
+              fontSize: 14,
+              marginLeft: 6,
+              marginBottom: 8,
+              borderWidth: 1,
+              borderColor: 'lightgray',
+              borderRadius: 10,
+              marginRight: 6,
+            }}
           />
         </View>
         <FlatList
