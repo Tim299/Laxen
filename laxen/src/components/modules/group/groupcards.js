@@ -247,11 +247,11 @@ function GroupCards() {
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    const groupsCollection = collection(FIREBASE_DB, 'tasks');
+    const groupsCollection = collection(FIREBASE_DB, 'Group');
     const unsubscribe = onSnapshot(groupsCollection, snapshot => {
       const groupsData = snapshot.docs.map(doc => ({
         ...doc.data(),
-        id: doc.id,
+        id: doc.title,
       }));
       setGroups(groupsData);
     });
@@ -262,24 +262,17 @@ function GroupCards() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={DATA} //ändra till db fetch
+        data={groups} //ändra till db fetch
         renderItem={({item}) => (
           <GroupCard
             title={item.title}
             amount={item.amount}
             description={item.description}
-            members={item.members}
             icon={item.icon}
             onPress={() => {
               navigation.navigate('subgroup', {
-                groupID: item.id,
-                title: item.title,
-                amount: item.amount,
-                description: item.deschribtion,
-                members: item.members,
-                payments: item.payments,
-                isPayed: item.isPayed,
-                paymentID: item.payments.id,
+                groupID: item.title,
+            
               });
             }}
           />
