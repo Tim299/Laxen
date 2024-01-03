@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Linking } from "react-native";
 
 // THIS IS HOW THE JSON FOR A PAYMENT HAS TO LOOK
@@ -17,9 +17,11 @@ import { Linking } from "react-native";
 //     }
 // };
 
-const openSwish = (data) => {
+async function openSwish(data) {
     const encodedPayload = encodeURIComponent(JSON.stringify(data));
-    const link = 'swish://payment?data=' + encodedPayload;
+    const callbackURL = "laxen://";
+    const encodedCallbackURL = encodeURIComponent(callbackURL);
+    const link = 'swish://payment?data=' + encodedPayload + '&callbackurl=' + encodedCallbackURL;
     Linking.openURL(link);
 }
 

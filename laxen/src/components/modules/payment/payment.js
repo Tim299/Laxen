@@ -225,7 +225,8 @@ const Payment = ({
     const payload = {
       version: 1,
       payee: {
-        value: "0000000000"
+        // need to get this from database
+        value: "+46701111111"
       },
       amount: {
         value: (amount / members.length).toFixed(1)
