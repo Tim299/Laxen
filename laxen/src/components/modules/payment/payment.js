@@ -222,22 +222,22 @@ const Payment = ({
   const handlePaymentClick = () => {
     setIsPaymentClicked(true);
 
-    const data = {
-    version: 1,
-    payee: {
-        value: "+46701111111"
+    const payload = {
+      version: 1,
+      payee: {
+        value: "0000000000"
       },
       amount: {
-          value: 200
+        value: (amount / members.length).toFixed(1)
       },
       message: {
-          value: "Hälsningar Bo Ek",
-          editable: true
+        value: deschribtion,
+        editable: false
       }
     };
     
     //lägg swisch här
-    openSwish(data);
+    openSwish(payload);
   };
 
   return (
