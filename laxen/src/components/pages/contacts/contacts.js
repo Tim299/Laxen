@@ -20,22 +20,17 @@ function ContactsScreen() {
       try {
         const usersRef = collection(FIREBASE_DB, 'users');
         const currentUserRef = doc(usersRef, currentUserId);
-
+  
         const currentUserDoc = await getDoc(currentUserRef);
         if (currentUserDoc.exists()) {
           const friends = currentUserDoc.data().friends || [];
-          const data = [];
-
-          for (const friendId of friends) {
-            const friendDoc = await getDoc(doc(usersRef, friendId));
-            if (friendDoc.exists()) {
-              const friendInfo = {
-                id: friendId,
-                email: friendDoc.data().email,
-              };
-              data.push(friendInfo);
-            }
-          }
+  
+          // Directly map the friends array to select 'uid' and 'email' fields
+          const data = friends.map(friend => ({
+            id: friend.uid, // Assuming the friend object in the 'friends' array contains 'uid' field
+            email: friend.email, // Assuming the friend object in the 'friends' array contains 'email' field
+          }));
+  
           setFriendData(data);
         } else {
           Alert.alert('Current user document does not exist.');
@@ -45,8 +40,10 @@ function ContactsScreen() {
         Alert.alert('Error fetching friend data.');
       }
     };
-
-    fetchFriendData();
+  
+    if (currentUserId) {
+      fetchFriendData();
+    }
   }, [currentUserId]);
 
   const renderFriendCard = ({item}) => (

@@ -100,7 +100,7 @@ function CreateContact({route}) {
           const existingFriendIndex = currentUserFriends.findIndex(friend => friend.uid === friendId);
 
           if (existingFriendIndex === -1) {
-            // Push the updatedFriend object into the friends array
+           
             const updatedFriends = [...currentUserFriends, updatedFriend];
         
             await updateDoc(currentUserRef, {

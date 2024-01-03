@@ -1,30 +1,33 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Text, TextInput, View, TouchableOpacity} from "react-native";
-import { StyleSheet } from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import {Text, TextInput, View, TouchableOpacity} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
-import { collection, doc, setDoc, getDocs } from 'firebase/firestore';
-import { UserIdContext } from '../../../App';
-import { FIREBASE_DB } from '../../../../FirebaseConfig';
-import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list';
+import {useNavigation} from '@react-navigation/native';
+import {collection, doc, setDoc, getDocs} from 'firebase/firestore';
+import {UserIdContext} from '../../../App';
+import {FIREBASE_DB} from '../../../../FirebaseConfig';
+import {
+  SelectList,
+  MultipleSelectList,
+} from 'react-native-dropdown-select-list';
 import * as colors from '../../modules/colors/colors';
 
 const styles = StyleSheet.create({
   closeIcon: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginTop: 20,
     marginRight: 20,
   },
   GroupFormContainer: {
     backgroundColor: colors.neutral,
-    height: "100%",
+    height: '100%',
   },
   createGroupText: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 26,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 10,
-    color: colors.grey
+    color: colors.grey,
   },
   input: {
     height: 50,
@@ -40,8 +43,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
-    marginHorizontal: "10%",
-    marginTop: "10%",
+    marginHorizontal: '10%',
+    marginTop: '10%',
     borderRadius: 10,
     elevation: 10,
     backgroundColor: colors.primary,
@@ -98,7 +101,7 @@ function CreateGroupForm({route}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedMember, setSelectedMember] = useState([]);
-  const [selectedIcon, setSelectedIcon] = useState("");
+  const [selectedIcon, setSelectedIcon] = useState('');
 
   const [currentUserId, setCurrentUserId] = useState(null);
 
@@ -108,21 +111,56 @@ function CreateGroupForm({route}) {
     }
   }, [route.params]);
 
-  const [friendEmail, setFriendEmail] = useState('');
-
   const categories = [
-    { key: '1', value: 'Fisk'},
-    { key: '2', value: 'Resor'},
-  ]
+    {key: '1', value: 'Fisk'},
+    {key: '2', value: 'Resor'},
+  ];
+  const [friendData, setFriendData] = useState([]);
 
+  const fetchFriendData = async () => {
+    try {
+      const usersRef = collection(FIREBASE_DB, 'users');
+      const currentUserRef = doc(usersRef, currentUserId);
+
+      const currentUserDoc = await getDoc(currentUserRef);
+      if (currentUserDoc.exists()) {
+        const friends = currentUserDoc.data().friends || [];
+        const data = [];
+
+        for (const friendId of friends) {
+          const friendDoc = await getDoc(doc(usersRef, friendId));
+          if (friendDoc.exists()) {
+            const friendInfo = {
+              id: friendId,
+              email: friendDoc.data().email,
+            };
+            data.push(friendInfo);
+          }
+        }
+        setFriendData(data);
+      } else {
+        Alert.alert('Current user document does not exist.');
+      }
+    } catch (error) {
+      console.error('Error fetching friend data:', error);
+      Alert.alert('Error fetching friend data.');
+    }
+  };
+
+  useEffect(() => {
+    fetchFriendData();
+  }, [currentUserId]);
+
+
+  
   const createGroup = async () => {
     try {
       // Fetch the current highest groupID
-      const querySnapshot = await getDocs(collection(FIREBASE_DB, 'tasks'));
+      const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Group'));
       const currentHighestID = querySnapshot.size;
-  
+
       // Extract values from selectedMember or set it to an empty array if undefined
-  
+
       const newGroup = {
         title,
         amount: 0,
@@ -130,15 +168,15 @@ function CreateGroupForm({route}) {
         members: selectedMember,
         id: (currentHighestID + 1).toString(),
       };
-  
+
       console.log('New group data:', newGroup);
-  
+
       // Add the new group to the 'tasks' collection
-      const docRef = doc(collection(FIREBASE_DB, 'tasks'), newGroup.id);
+      const docRef = doc(collection(FIREBASE_DB, 'Group'), newGroup.id);
       await setDoc(docRef, newGroup);
-  
+
       console.log(`Group added with ID ${newGroup.id}`);
-  
+
       // Navigate to the newly created group
       navigation.navigate('subgroup', newGroup);
     } catch (error) {
@@ -170,7 +208,7 @@ function CreateGroupForm({route}) {
       />
 
       <SelectList
-        setSelected={(val) => setSelectedIcon(val)}
+        setSelected={val => setSelectedIcon(val)}
         data={categories}
         save="value"
         label="Kategorier"
@@ -181,7 +219,7 @@ function CreateGroupForm({route}) {
       />
 
       <MultipleSelectList
-        setSelected={(val) => setSelectedMember(val)}
+        setSelected={val => setSelectedMember(val)}
         data={friendEmail}
         save="value"
         placeholder="Välj Medlemmar"
@@ -190,10 +228,7 @@ function CreateGroupForm({route}) {
         boxStyles={styles.memberBox}
         dropdownStyles={styles.memberDropdown}
       />
-      <TouchableOpacity
-        style={styles.createGroupButton}
-        onPress={createGroup}
-      >
+      <TouchableOpacity style={styles.createGroupButton} onPress={createGroup}>
         <Text style={styles.createGroupButtonText}>Skapa Grupp</Text>
       </TouchableOpacity>
     </View>
