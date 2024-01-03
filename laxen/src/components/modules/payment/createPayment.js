@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function CreatePaymentForm() {
+function CreatePaymentForm({route}) {
   const navigation = useNavigation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -101,12 +101,15 @@ function CreatePaymentForm() {
   const [creator, setCreator] = useState('');
   const [selectedMember, setSelectedMember] = useState([]);
   const [selectedIcon, setSelectedIcon] = useState("");
-
+  const {
+    groupID,
+ 
+  } = route.params;
   // temporary solution before integrated with subgroups
   const [selectedGroup, setSelectedGroup] = useState('');
   const [groups, setGroups] = useState([]);
   useEffect(() => {
-    const groupsCollection = collection(FIREBASE_DB, 'tasks');
+    const groupsCollection = collection(FIREBASE_DB, 'groups');
     const unsubscribe = onSnapshot(groupsCollection, (snapshot) => {
       const groupsData = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 
@@ -165,7 +168,7 @@ function CreatePaymentForm() {
         amount: parseInt(amount),
         members: selectedMember,
         id: (currentHighestID + 1).toString(), 
-        group: selectedGroup,
+        group: groupID,
       };
   
       console.log('New payment data:', newPayment);
