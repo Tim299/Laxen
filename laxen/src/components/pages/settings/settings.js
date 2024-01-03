@@ -70,21 +70,16 @@ function SettingsScreen() {
     });
   }, []);
 
-  const settingItem = ({item}) => (
-    <ListItem
-      title={item.title}
-      description={item.description}
-      icon={item.icon}
-      onPress={() => {
-        navigation.navigate('SubSetting', {
-          settingID: item.id,
-        });
-      }}
-    />
-  );
-
   const [phoneNumber, setPhoneNumber] = useState('');
   const [userName, setUserName] = useState('');
+
+  const handleNumberChange = newNumber => {
+    const numericText = newNumber.replace(/[^0-9]/g, '');
+    setPhoneNumber(numericText);
+  };
+  const handleUserChange = newUser => {
+    setUserName(newUser);
+  };
 
   const updatePhoneNumber = async () => {
     try {
@@ -135,7 +130,7 @@ function SettingsScreen() {
           </Text>
           <TextInput
             value={userName}
-            onChangeText={setUserName}
+            onChangeText={handleUserChange}
             onEndEditing={updatUserName}
             placeholder="Ange användarnamn..."
             style={{
@@ -165,7 +160,7 @@ function SettingsScreen() {
           <TextInput
             keyboardType="numeric"
             value={phoneNumber}
-            onChangeText={setPhoneNumber}
+            onChangeText={handleNumberChange}
             onEndEditing={updatePhoneNumber}
             placeholder="Ange telefonnummer..."
             style={{
