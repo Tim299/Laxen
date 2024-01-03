@@ -4,11 +4,11 @@ import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from '@rneui/themed';
 import {Tooltip} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   feedContainer: {
     width: '100%',
-    height: '100%',
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     height: '55 %',
     padding: '3%',
     zIndex: 10,
-    margin: 'auto',
   },
   payment: {
     display: 'flex',
@@ -206,26 +205,45 @@ const Payment = ({
   creator,
   deschribtion,
   icon,
+  groupID,
+  isPayed,
+  paymentID,
+  paymentMembers,
 }) => {
   const [isPaymentClicked, setIsPaymentClicked] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
+
+  //   console.log(paymentMembers, 'paymentMembers');
+  //   console.log(groupID, 'groupID');
+  //   console.log(paymentID, 'paymentID');
+  //   console.log(isPayed, 'isPayed');
 
   const handlePaymentClick = () => {
     setIsPaymentClicked(true);
 
     //lägg swisch här
 
-    setTimeout(() => {
-      setIsPaymentClicked(false);
-    }, 2000);
-  };
-
-  const handleMemberClick = () => {
-    setTooltipVisible(!tooltipVisible);
+    // setTimeout(() => {
+    //   setIsPaymentClicked(false);
+    // }, 2000);
   };
 
   return (
-    <View style={styles.feedNotification}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isPaymentClicked ? colors.neutral : colors.white,
+        marginTop: '0%',
+        marginBottom: '5%',
+        borderRadius: 10,
+        width: '97%',
+        height: '55 %',
+        padding: '3%',
+        zIndex: 10,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        elevation: 5,
+      }}>
       <View style={styles.payment}>
         <Icon name={icon} size={20} color={colors.accent} />
         <Text style={styles.paymentTitle}>{title}</Text>
@@ -260,20 +278,23 @@ const Payment = ({
 
         <Button
           onPress={handlePaymentClick}
-          title={`Betala ${amount} kr`}
+          title={`Betala ${(amount / members.length).toFixed(1)} kr`}
           titleStyle={styles.btnTitle}
           buttonStyle={styles.btnBox}
           containerStyle={{
-            width: 100,
+            width: 140,
           }}
           loading={isPaymentClicked}
+          disabled={isPaymentClicked}
         />
       </View>
     </View>
   );
 };
 
-function PaymentFeed({payments}) {
+function PaymentFeed({payments, groupID, members, isPayed, paymentID}) {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.feedContainer}>
       <FlatList
@@ -287,6 +308,10 @@ function PaymentFeed({payments}) {
             deschribtion={item.deschribtion}
             members={item.members}
             icon={item.icon}
+            groupID={groupID}
+            isPayed={isPayed}
+            paymentID={paymentID}
+            paymentMembers={members}
           />
         )}
         keyExtractor={item => item.id}

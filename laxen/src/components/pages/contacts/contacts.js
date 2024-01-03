@@ -1,5 +1,12 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, TouchableOpacity, FlatList, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+  Image,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {collection, doc, getDoc, query, where} from 'firebase/firestore';
 import {UserIdContext} from '../../../App';
@@ -71,6 +78,7 @@ function ContactsScreen() {
         <Text h1 style={styles.headerFont}>
           Kontakter
         </Text>
+        <Image source={require('../login/fish.png')} style={styles.logo} />
       </View>
       <View>
         <TouchableOpacity

@@ -10,7 +10,7 @@ import {addDoc, collection, onSnapshot} from 'firebase/firestore';
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '85%',
+    height: '90%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -73,19 +73,20 @@ const DATA = [
     amount: 1000,
     description: 'Lax gruppen planerar en resa till Skåne.',
     icon: 'fish-outline',
-    members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+    members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Tim Larsson'],
     id: '0',
     payments: [
       {
         title: 'Bussbiljetter',
-        amount: 400,
+        amount: 500000,
         date: '20-04-2023',
         creator: 'Hampus Grimskär',
         deschribtion:
           'bussbiljetterna till resan är dyra så vi måste spara pengar. Betala inom 2 veckor.',
         icon: 'airplane-outline',
-        members: ['Hampus Grimskär', 'Ludvig Nilsson'],
+        members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Jonathan Skoog'],
         id: '0',
+        isPayed: false,
       },
       {
         title: 'Lunch',
@@ -96,6 +97,7 @@ const DATA = [
         icon: 'restaurant-outline',
         members: ['Hampus Grimskär', 'Ludvig Nilsson'],
         id: '1',
+        isPayed: false,
       },
       {
         title: 'Lunch',
@@ -106,6 +108,7 @@ const DATA = [
         icon: 'restaurant-outline',
         members: ['Hampus Grimskär', 'Ludvig Nilsson'],
         id: '2',
+        isPayed: false,
       },
       {
         title: 'Lunch',
@@ -116,6 +119,7 @@ const DATA = [
         icon: 'restaurant-outline',
         members: ['Hampus Grimskär', 'Ludvig Nilsson'],
         id: '3',
+        isPayed: false,
       },
       {
         title: 'Lunch',
@@ -126,6 +130,7 @@ const DATA = [
         icon: 'restaurant-outline',
         members: ['Hampus Grimskär', 'Ludvig Nilsson'],
         id: '4',
+        isPayed: false,
       },
       {
         title: 'Lunch',
@@ -136,6 +141,7 @@ const DATA = [
         icon: 'restaurant-outline',
         members: ['Hampus Grimskär', 'Ludvig Nilsson'],
         id: '5',
+        isPayed: false,
       },
     ],
   },
@@ -146,6 +152,20 @@ const DATA = [
     icon: 'airplane-outline',
     members: ['Hampus Grimskär'],
     id: '1',
+    payments: [
+      {
+        title: 'Bussbiljetter',
+        amount: 400,
+        date: '20-04-2023',
+        creator: 'Hampus Grimskär',
+        deschribtion:
+          'bussbiljetterna till resan är dyra så vi måste spara pengar. Betala inom 2 veckor.',
+        icon: 'airplane-outline',
+        members: ['Hampus Grimskär', 'Ludvig Nilsson', 'Jonathan Skoog'],
+        id: '0',
+        isPayed: false,
+      },
+    ],
   },
   {
     title: 'Grupp 3',
@@ -204,7 +224,7 @@ const GroupCard = ({title, amount, description, members, icon, onPress}) => (
         renderItem={({item}) => <Member member={item}></Member>}
         horizontal={true}
       />
-      <View
+      {/* <View
         style={{
           backgroundColor: colors.secondary,
           width: '20%',
@@ -217,7 +237,7 @@ const GroupCard = ({title, amount, description, members, icon, onPress}) => (
           fontFamily: 'poppins',
         }}>
         <Text style={styles.paymentAmount}>{amount} kr</Text>
-      </View>
+      </View> */}
     </View>
   </TouchableOpacity>
 );
@@ -258,6 +278,8 @@ function GroupCards() {
                 description: item.deschribtion,
                 members: item.members,
                 payments: item.payments,
+                isPayed: item.isPayed,
+                paymentID: item.payments.id,
               });
             }}
           />

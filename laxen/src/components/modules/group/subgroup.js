@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   subgroupViewContainer: {
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
+    height: '91%',
   },
   headerContainer: {
     display: 'flex',
@@ -33,6 +33,14 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     color: colors.black,
+  },
+  createGroupIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 20,
+    elevation: 5,
+    backgroundColor: colors.primary,
+    alignSelf: 'center',
   },
 });
 
@@ -66,28 +74,52 @@ const DATA = [
 ];
 
 function SubGroup({route, navigation}) {
-  const {groupID, title, amount, description, members, payments} = route.params;
+  const {
+    groupID,
+    title,
+    amount,
+    description,
+    members,
+    payments,
+    isPayed,
+    paymentID,
+  } = route.params;
 
   return (
-    <View style={styles.subgroupViewContainer}>
-      <View style={styles.headerContainer}>
-        <Text h1 style={styles.headerFont}>
-          {title}
-        </Text>
+    <View>
+      <View style={styles.subgroupViewContainer}>
+        <View style={styles.headerContainer}>
+          <Text h1 style={styles.headerFont}>
+            {title}
+          </Text>
 
-        <View style={{backgroundColor: colors.lightgrey, borderRadius: 50}}>
-          <Icon
-            name="close-outline"
-            size={30}
-            color={colors.black}
-            onPress={() => {
-              navigation.navigate('groups');
-            }}
-          />
+          <View style={{backgroundColor: colors.lightgrey, borderRadius: 50}}>
+            <Icon
+              name="close-outline"
+              size={30}
+              color={colors.black}
+              onPress={() => {
+                navigation.navigate('groups');
+              }}
+            />
+          </View>
         </View>
-      </View>
 
-      <PaymentFeed payments={payments} />
+        <PaymentFeed
+          payments={payments}
+          groupID={groupID}
+          members={members}
+          isPayed={isPayed}
+          paymentID={paymentID}
+        />
+      </View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('createPayment', {groupID: groupID});
+        }}
+        style={styles.createGroupIcon}>
+        <Icon name="add-outline" size={60} color={colors.black} />
+      </TouchableOpacity>
     </View>
   );
 }
