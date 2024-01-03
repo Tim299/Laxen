@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import subGroup from './subgroup';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
-import {addDoc, collection, onSnapshot} from 'firebase/firestore';
+import {collection, query, where, onSnapshot} from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
@@ -242,13 +242,17 @@ const GroupCard = ({title, amount, description, members, icon, onPress}) => (
   </TouchableOpacity>
 );
 
-function GroupCards() {
+function GroupCards({userid}) {
   const navigation = useNavigation();
   const [groups, setGroups] = useState([]);
-
   useEffect(() => {
-    const groupsCollection = collection(FIREBASE_DB, 'tasks');
-    const unsubscribe = onSnapshot(groupsCollection, snapshot => {
+    const groupsCollection = collection(FIREBASE_DB, 'Group');
+    const queryByUserId = query(
+      groupsCollection,
+      where('userIds', 'array-contains', userid),
+    );
+
+    const unsubscribe = onSnapshot(queryByUserId, snapshot => {
       const groupsData = snapshot.docs.map(doc => ({
         ...doc.data(),
         id: doc.id,
@@ -262,24 +266,16 @@ function GroupCards() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={DATA} //ändra till db fetch
+        data={groups} //ändra till db fetch
         renderItem={({item}) => (
           <GroupCard
             title={item.title}
             amount={item.amount}
             description={item.description}
-            members={item.members}
             icon={item.icon}
             onPress={() => {
               navigation.navigate('subgroup', {
-                groupID: item.id,
-                title: item.title,
-                amount: item.amount,
-                description: item.deschribtion,
-                members: item.members,
-                payments: item.payments,
-                isPayed: item.isPayed,
-                paymentID: item.payments.id,
+                groupID: item.title,
               });
             }}
           />

@@ -44,7 +44,7 @@ function GroupsScreen() {
         <Image source={require('../login/fish.png')} style={styles.logo} />
       </View>
       <View>
-        <GroupCards></GroupCards>
+        <GroupCards userid={currentUserId}></GroupCards>
       </View>
       <View style={styles.createButtonsContainer}>
         <TouchableOpacity
