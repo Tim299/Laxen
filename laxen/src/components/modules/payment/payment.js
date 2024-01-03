@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from '@rneui/themed';
 import {Tooltip} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
+import openSwish from '../swish/swish';
 
 const styles = StyleSheet.create({
   feedContainer: {
@@ -222,10 +223,7 @@ const Payment = ({
     setIsPaymentClicked(true);
 
     //lägg swisch här
-
-    // setTimeout(() => {
-    //   setIsPaymentClicked(false);
-    // }, 2000);
+    openSwish();
   };
 
   return (
