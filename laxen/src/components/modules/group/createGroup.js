@@ -3,7 +3,8 @@ import {Text, TextInput, View, TouchableOpacity} from 'react-native';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-import {collection, doc, setDoc, getDocs} from 'firebase/firestore';
+import {collection, doc, setDoc, getDocs, getDoc} from 'firebase/firestore';
+
 import {UserIdContext} from '../../../App';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
 import {
@@ -96,12 +97,14 @@ const styles = StyleSheet.create({
   },
 });
 
-function CreateGroupForm({route}) {
+function CreateGroup({route}) {
   const navigation = useNavigation();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedMember, setSelectedMember] = useState([]);
   const [selectedIcon, setSelectedIcon] = useState('');
+  const [friendData, setFriendData] = useState([]);
+  const [rawFriendData, setRawFriendData] = useState([]);
 
   const [currentUserId, setCurrentUserId] = useState(null);
 
@@ -115,69 +118,63 @@ function CreateGroupForm({route}) {
     {key: '1', value: 'Fisk'},
     {key: '2', value: 'Resor'},
   ];
-  const [friendData, setFriendData] = useState([]);
 
-  const fetchFriendData = async () => {
-    try {
-      const usersRef = collection(FIREBASE_DB, 'users');
-      const currentUserRef = doc(usersRef, currentUserId);
-
-      const currentUserDoc = await getDoc(currentUserRef);
-      if (currentUserDoc.exists()) {
-        const friends = currentUserDoc.data().friends || [];
-        const data = [];
-
-        for (const friendId of friends) {
-          const friendDoc = await getDoc(doc(usersRef, friendId));
-          if (friendDoc.exists()) {
-            const friendInfo = {
-              id: friendId,
-              email: friendDoc.data().email,
-            };
-            data.push(friendInfo);
-          }
-        }
-        setFriendData(data);
-      } else {
-        Alert.alert('Current user document does not exist.');
-      }
-    } catch (error) {
-      console.error('Error fetching friend data:', error);
-      Alert.alert('Error fetching friend data.');
-    }
-  };
+  console.log(currentUserId, 'from form');
 
   useEffect(() => {
-    fetchFriendData();
+    const fetchFriendData = async () => {
+      try {
+        const usersRef = collection(FIREBASE_DB, 'users');
+        const currentUserRef = doc(usersRef, currentUserId);
+
+        const currentUserDoc = await getDoc(currentUserRef);
+        if (currentUserDoc.exists()) {
+          const friends = currentUserDoc.data().friends || [];
+
+          const data = friends.map(friend => ({
+            key: friend.uid,
+            value: friend.email,
+          }));
+
+          const rawData = friends.map(friend => ({
+            id: friend.uid,
+            email: friend.email,
+          }));
+          setRawFriendData(rawData);
+          setFriendData(data);
+        } else {
+          Alert.alert('Current user document does not exist.');
+        }
+      } catch (error) {
+        console.error('Error fetching friend data:', error);
+        Alert.alert('Error fetching friend data.');
+      }
+    };
+    if (currentUserId) {
+      fetchFriendData();
+    }
   }, [currentUserId]);
 
-
-  
-  const createGroup = async () => {
+  const createGroupInDB = async () => {
     try {
-      // Fetch the current highest groupID
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Group'));
       const currentHighestID = querySnapshot.size;
-
-      // Extract values from selectedMember or set it to an empty array if undefined
 
       const newGroup = {
         title,
         amount: 0,
         description,
-        members: selectedMember,
+        members: rawFriendData,
         id: (currentHighestID + 1).toString(),
       };
 
       console.log('New group data:', newGroup);
 
-      // Add the new group to the 'tasks' collection
       const docRef = doc(collection(FIREBASE_DB, 'Group'), newGroup.id);
       await setDoc(docRef, newGroup);
 
       console.log(`Group added with ID ${newGroup.id}`);
 
-      // Navigate to the newly created group
       navigation.navigate('subgroup', newGroup);
     } catch (error) {
       console.error('Error creating group: ', error);
@@ -220,7 +217,7 @@ function CreateGroupForm({route}) {
 
       <MultipleSelectList
         setSelected={val => setSelectedMember(val)}
-        data={friendEmail}
+        data={friendData}
         save="value"
         placeholder="Välj Medlemmar"
         searchPlaceholder="Sök i kontakter"
@@ -228,11 +225,13 @@ function CreateGroupForm({route}) {
         boxStyles={styles.memberBox}
         dropdownStyles={styles.memberDropdown}
       />
-      <TouchableOpacity style={styles.createGroupButton} onPress={createGroup}>
+      <TouchableOpacity
+        style={styles.createGroupButton}
+        onPress={createGroupInDB}>
         <Text style={styles.createGroupButtonText}>Skapa Grupp</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-export default CreateGroupForm;
+export default CreateGroup;
