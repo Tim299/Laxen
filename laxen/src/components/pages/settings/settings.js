@@ -18,15 +18,6 @@ import {useNavigation} from '@react-navigation/native';
 import {subSetting} from '../../modules/settings/subsetting';
 import {getAuth, onAuthStateChanged, updateCurrentUser} from 'firebase/auth';
 
-const DATA = [
-  {
-    id: '1',
-    title: 'About the App',
-    description: 'Version, license',
-    icon: 'information-circle-outline',
-  },
-];
-
 const ListItem = ({title, description, icon}) => (
   <View style={styles.settingsListItem}>
     <View style={{width: '80%', flex: 1}}>
@@ -53,7 +44,7 @@ function SettingsScreen() {
   const [currentUserId, setCurrentUserId] = useState(null);
 
   const goToAnotherScreen = () => {
-    navigation.navigate('HomeScreen'); // Navigate to 'AnotherScreen'
+    navigation.navigate('HomeScreen');
   };
 
   const goToSubSetting = () => {
