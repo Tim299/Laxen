@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    // backgroundColor: 'lightgrey',
     height: '90%',
   },
   settingsViewContainer: {

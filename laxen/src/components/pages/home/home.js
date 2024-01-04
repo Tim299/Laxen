@@ -14,7 +14,6 @@ import PaymentFeed from '../../modules/payment/payment';
 import {Header, Button} from 'react-native-elements';
 import {IconButton, MD3Colors} from 'react-native-elements';
 
-// import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import * as colors from '../../modules/colors/colors';

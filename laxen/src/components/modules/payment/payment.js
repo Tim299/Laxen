@@ -1,11 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, FlatList, TouchableOpacity, Alert} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from '@rneui/themed';
 import {Tooltip} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
-import {collection, query, where, getDocs, doc, deleteDoc} from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  deleteDoc,
+} from 'firebase/firestore';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
 import openSwish from '../swish/swish';
 
@@ -222,7 +236,6 @@ const Payment = ({
     const payload = {
       version: 1,
       payee: {
-        // need to get this from database
         value: '+46701111111',
       },
       amount: {
@@ -234,7 +247,6 @@ const Payment = ({
       },
     };
 
-    //lägg swisch här
     openSwish(payload);
   };
 
@@ -255,28 +267,28 @@ const Payment = ({
         elevation: 5,
       }}>
       <TouchableOpacity onLongPress={onLongPress}>
-      <View style={styles.payment}>
-        <Icon name={icon} size={20} color={colors.accent} />
-        <Text style={styles.paymentTitle}>{title}</Text>
-        <Text style={styles.paymentDate}>{date}</Text>
-        <View style={styles.toolTipBox}>
-          <Text style={styles.creatorText}>Skapad av:</Text>
+        <View style={styles.payment}>
+          <Icon name={icon} size={20} color={colors.accent} />
+          <Text style={styles.paymentTitle}>{title}</Text>
+          <Text style={styles.paymentDate}>{date}</Text>
+          <View style={styles.toolTipBox}>
+            <Text style={styles.creatorText}>Skapad av:</Text>
 
-          <Tooltip
-            isVisible={tooltipVisible}
-            popover={<Text>{creator}</Text>}
-            backgroundColor={colors.neutral}
-            width={160}
-            height={40}
-            toggleOnPress={true}
-            animationType={'fade'}
-            withOverlay={true}
-            placement={'top'}
-            skipAndroidStatusBar={true}>
-            <Member member={creator} />
-          </Tooltip>
+            <Tooltip
+              isVisible={tooltipVisible}
+              popover={<Text>{creator}</Text>}
+              backgroundColor={colors.neutral}
+              width={160}
+              height={40}
+              toggleOnPress={true}
+              animationType={'fade'}
+              withOverlay={true}
+              placement={'top'}
+              skipAndroidStatusBar={true}>
+              <Member member={creator} />
+            </Tooltip>
+          </View>
         </View>
-      </View>
       </TouchableOpacity>
 
       <Text style={styles.deschribtion}>{deschribtion}</Text>
@@ -348,13 +360,13 @@ function PaymentFeed({payments, groupID, members, isPayed, paymentID}) {
     fetchNames();
   }, [payments]);
 
-  const handleLongPress = async (paymentID) => {
+  const handleLongPress = async paymentID => {
     try {
       Alert.alert(
         'Delete Payment',
         'Are you sure you want to delete this payment?',
         [
-          { text: 'Cancel', style: 'cancel' },
+          {text: 'Cancel', style: 'cancel'},
           {
             text: 'Delete',
             onPress: async () => {
@@ -364,7 +376,7 @@ function PaymentFeed({payments, groupID, members, isPayed, paymentID}) {
             style: 'destructive',
           },
         ],
-        { cancelable: true }
+        {cancelable: true},
       );
     } catch (error) {
       console.error('Error deleting payment:', error.message);
@@ -385,10 +397,6 @@ function PaymentFeed({payments, groupID, members, isPayed, paymentID}) {
             members={item.memberNames}
             icon={item.icon}
             onLongPress={() => handleLongPress(item.id)}
-            // groupID={groupID}
-            // isPayed={isPayed}
-            // paymentID={paymentID}
-            // paymentMembers={members}
           />
         )}
         keyExtractor={item => item.id}

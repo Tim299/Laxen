@@ -58,7 +58,7 @@ function SettingsScreen() {
 
   const goToSubSetting = () => {
     navigation.navigate('subsetting');
-  }
+  };
 
   useEffect(() => {
     const auth = FIREBASE_AUTH;
@@ -140,8 +140,9 @@ function SettingsScreen() {
               borderWidth: 1,
               borderColor: 'lightgray',
               borderRadius: 10,
-              marginRight: 6 
-            }}/>
+              marginRight: 6,
+            }}
+          />
         </View>
         <View
           style={{
@@ -170,12 +171,13 @@ function SettingsScreen() {
               borderWidth: 1,
               borderColor: 'lightgray',
               borderRadius: 10,
-              marginRight: 6 
-            }}/>
+              marginRight: 6,
+            }}
+          />
         </View>
         <TouchableOpacity onPress={goToSubSetting}>
           <View style={styles.settingsListItem}>
-            <View style={{ width: '80%', flex: 1 }}>
+            <View style={{width: '80%', flex: 1}}>
               <Text style={styles.settingsListText}>Om appen</Text>
               <Text style={styles.settingsListDesc}>Verion, licenser</Text>
             </View>
@@ -187,7 +189,7 @@ function SettingsScreen() {
                 marginTop: '-10%',
                 marginBottom: 'auto',
               }}
-              name='information-circle-outline'
+              name="information-circle-outline"
               size={30}
               color={colors.black}
             />

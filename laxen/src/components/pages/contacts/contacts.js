@@ -15,11 +15,9 @@ import {FIREBASE_DB} from '../../../../FirebaseConfig';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as colors from '../../modules/colors/colors';
 import {StyleSheet} from 'react-native';
-import Icon2 from 'react-native-vector-icons/FontAwesome'; // Or replace with your chosen icon library
+import Icon2 from 'react-native-vector-icons/FontAwesome';
 
 const styles2 = StyleSheet.create({
-  // Other styles
-
   friendCardContainer: {
     padding: 10,
     marginVertical: 5,
@@ -33,7 +31,7 @@ const styles2 = StyleSheet.create({
     alignItems: 'center',
   },
   iconContainer: {
-    backgroundColor: 'blue', // Change color or replace with image
+    backgroundColor: 'blue',
     padding: 5,
     borderRadius: 5,
     marginRight: 10,
@@ -44,9 +42,7 @@ const styles2 = StyleSheet.create({
   friendEmail: {
     fontSize: 16,
     fontWeight: 'bold',
-    // Other styles for email or name
   },
-  // Add more styles as needed
 });
 function ContactsScreen() {
   const {currentUserId} = useContext(UserIdContext);
@@ -67,10 +63,9 @@ function ContactsScreen() {
         if (currentUserDoc.exists()) {
           const friends = currentUserDoc.data().friends || [];
 
-          // Directly map the friends array to select 'uid' and 'email' fields
           const data = friends.map(friend => ({
-            id: friend.uid, // Assuming the friend object in the 'friends' array contains 'uid' field
-            email: friend.email, // Assuming the friend object in the 'friends' array contains 'email' field
+            id: friend.uid,
+            email: friend.email,
           }));
 
           setFriendData(data);
@@ -93,12 +88,10 @@ function ContactsScreen() {
       onPress={() => handleFriendClick(item.id)}>
       <View style={styles2.friendCard}>
         <View style={styles2.iconContainer}>
-          {/* Add your friend icon */}
           <Icon2 name="gear" size={20} color="white" />
         </View>
         <View style={styles2.emailContainer}>
           <Text style={styles2.friendEmail}>{item.email}</Text>
-          {/* Add additional styling or content here */}
         </View>
       </View>
     </TouchableOpacity>

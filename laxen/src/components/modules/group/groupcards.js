@@ -315,7 +315,6 @@ function GroupCards({userid}) {
 
   const handleLongPress = async groupId => {
     try {
-      // Confirm deletion with an alert
       Alert.alert(
         'Delete Group',
         'Are you sure you want to delete this group?',
@@ -324,7 +323,6 @@ function GroupCards({userid}) {
           {
             text: 'Delete',
             onPress: async () => {
-              // Delete the group from Firebase
               const groupDocRef = doc(FIREBASE_DB, 'Group', groupId);
               await deleteDoc(groupDocRef);
             },
@@ -341,7 +339,7 @@ function GroupCards({userid}) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={groups} //ändra till db fetch
+        data={groups}
         renderItem={({item}) => (
           <GroupCard
             title={item.title}

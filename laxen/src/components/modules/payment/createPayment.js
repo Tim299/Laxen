@@ -108,12 +108,10 @@ function CreatePaymentForm({route}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  // const [date, setDate] = useState('');
   const [creator, setCreator] = useState('');
   const [selectedMember, setSelectedMember] = useState([]);
   const [selectedIcon, setSelectedIcon] = useState('');
   const {groupID} = route.params;
-  // temporary solution before integrated with subgroups
   const [selectedGroup, setSelectedGroup] = useState('');
   const [groups, setGroups] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -189,7 +187,6 @@ function CreatePaymentForm({route}) {
     }
   }, [currentUserId]);
 
-  // custom function to only allow numbers as input
   const inputNumber = input => {
     for (let i = 0; i < input.length; i++) {
       if (isNaN(parseInt(input[i]))) {
@@ -199,14 +196,6 @@ function CreatePaymentForm({route}) {
     }
     setAmount(input);
   };
-
-  const contacts = [
-    // Get contacts from database to display as members to add to group here
-
-    // This is sample data
-    {key: '1', value: 'Hampus Grimskär'},
-    {key: '2', value: 'Ludvig Nilsson'},
-  ];
 
   const categories = [
     {key: '1', value: 'Fisk'},
@@ -226,11 +215,8 @@ function CreatePaymentForm({route}) {
 
   const createPayment = async () => {
     try {
-      // Fetch the current highest groupID
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'payments'));
       const currentHighestID = querySnapshot.size;
-
-      // Extract values from selectedMember or set it to an empty array if undefined
 
       const newPayment = {
         title,
@@ -253,7 +239,6 @@ function CreatePaymentForm({route}) {
         icon: getIcon(),
       };
 
-      // Add the new group to the 'tasks' collection
       const docRef = doc(collection(FIREBASE_DB, 'payments'), newPayment.id);
       await setDoc(docRef, newPayment);
 

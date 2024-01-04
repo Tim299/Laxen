@@ -60,7 +60,7 @@ const Login = () => {
           groups: [],
           friends: [],
           id: user.uid,
-          username: 'Jonathan Skoog', //ändra sen
+          username: 'Jonathan Skoog',
         };
 
         const docRef = doc(collection(FIREBASE_DB, 'users'), newUser.id);

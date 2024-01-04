@@ -84,7 +84,7 @@ function CreateContact({route}) {
       if (!querySnapshot.empty) {
         const friendDoc = querySnapshot.docs[0];
         const friendId = friendDoc.id;
-       
+
         const currentUserRef = doc(usersRef, currentUserId);
         const currentUserDoc = await getDoc(currentUserRef);
 
@@ -97,12 +97,13 @@ function CreateContact({route}) {
           const currentUserData = currentUserDoc.data();
           const currentUserFriends = currentUserData.friends || [];
 
-          const existingFriendIndex = currentUserFriends.findIndex(friend => friend.uid === friendId);
+          const existingFriendIndex = currentUserFriends.findIndex(
+            friend => friend.uid === friendId,
+          );
 
           if (existingFriendIndex === -1) {
-           
             const updatedFriends = [...currentUserFriends, updatedFriend];
-        
+
             await updateDoc(currentUserRef, {
               friends: updatedFriends,
             });

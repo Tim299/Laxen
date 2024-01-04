@@ -108,7 +108,6 @@ function SubGroup({route, navigation}) {
       try {
         const paymentsRef = collection(FIREBASE_DB, 'payments');
 
-        // Query payments where 'group' field matches the selected group ID
         const querySnapshot = await getDocs(
           query(paymentsRef, where('group', '==', groupID)),
         );
@@ -128,11 +127,9 @@ function SubGroup({route, navigation}) {
     };
 
     if (groupID) {
-      fetchPaymentsData(); // Fetch initially when groupID changes
-     
+      fetchPaymentsData();
     }
   }, [groupID]);
-
 
   return (
     <View>
@@ -158,8 +155,6 @@ function SubGroup({route, navigation}) {
           payments={paymentData}
           groupID={groupID}
           members={members}
-          // isPayed={isPayed}
-          // paymentID={paymentID}
         />
       </View>
       <TouchableOpacity

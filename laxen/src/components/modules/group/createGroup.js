@@ -128,8 +128,6 @@ function CreateGroup({route}) {
     {key: '2', value: 'Resor'},
   ];
 
-  // console.log(currentUserId, 'from form');
-
   useEffect(() => {
     const fetchFriendData = async () => {
       try {
@@ -189,8 +187,8 @@ function CreateGroup({route}) {
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Group'));
       const currentHighestID = querySnapshot.size;
       const newUserIds = [
-        currentUserId, // Include current user ID in the user IDs array
-        ...rawFriendData.map(friend => friend.id), // Include other friend IDs
+        currentUserId,
+        ...rawFriendData.map(friend => friend.id),
       ];
       const newGroup = {
         title,
