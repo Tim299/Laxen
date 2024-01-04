@@ -163,7 +163,17 @@ function SubGroup({route, navigation}) {
           navigation.navigate('createPayment', {groupID: groupID});
         }}
         style={styles.createGroupIcon}>
-        <Icon name="add-outline" size={60} color={colors.black} />
+        <Icon
+          name="logo-usd"
+          size={30}
+          color={colors.black}
+          style={{
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignSelf: 'center',
+            marginTop: 12,
+          }}
+        />
       </TouchableOpacity>
     </View>
   );
