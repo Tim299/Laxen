@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {Text, View, StyleSheet, FlatList, TouchableOpacity, Alert} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from '@rneui/themed';
 import {Tooltip} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
-import {collection, query, where, getDocs} from 'firebase/firestore';
+import {collection, query, where, getDocs, doc, deleteDoc} from 'firebase/firestore';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
 import openSwish from '../swish/swish';
 
@@ -211,6 +211,7 @@ const Payment = ({
   isPayed,
   paymentID,
   paymentMembers,
+  onLongPress,
 }) => {
   const [isPaymentClicked, setIsPaymentClicked] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -253,6 +254,7 @@ const Payment = ({
         alignSelf: 'center',
         elevation: 5,
       }}>
+      <TouchableOpacity onLongPress={onLongPress}>
       <View style={styles.payment}>
         <Icon name={icon} size={20} color={colors.accent} />
         <Text style={styles.paymentTitle}>{title}</Text>
@@ -275,6 +277,7 @@ const Payment = ({
           </Tooltip>
         </View>
       </View>
+      </TouchableOpacity>
 
       <Text style={styles.deschribtion}>{deschribtion}</Text>
 
@@ -345,6 +348,29 @@ function PaymentFeed({payments, groupID, members, isPayed, paymentID}) {
     fetchNames();
   }, [payments]);
 
+  const handleLongPress = async (paymentID) => {
+    try {
+      Alert.alert(
+        'Delete Payment',
+        'Are you sure you want to delete this payment?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Delete',
+            onPress: async () => {
+              const paymentDocRef = doc(FIREBASE_DB, 'payments', paymentID);
+              await deleteDoc(paymentDocRef);
+            },
+            style: 'destructive',
+          },
+        ],
+        { cancelable: true }
+      );
+    } catch (error) {
+      console.error('Error deleting payment:', error.message);
+    }
+  };
+
   return (
     <View style={styles.feedContainer}>
       <FlatList
@@ -358,6 +384,7 @@ function PaymentFeed({payments, groupID, members, isPayed, paymentID}) {
             deschribtion={item.description}
             members={item.memberNames}
             icon={item.icon}
+            onLongPress={() => handleLongPress(item.id)}
             // groupID={groupID}
             // isPayed={isPayed}
             // paymentID={paymentID}
