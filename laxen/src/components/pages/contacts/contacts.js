@@ -12,7 +12,41 @@ import {collection, doc, getDoc, query, where} from 'firebase/firestore';
 import {UserIdContext} from '../../../App';
 import {styles} from './contacts_stylesheet';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
+import {StyleSheet} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Or replace with your chosen icon library
 
+
+const styles2 = StyleSheet.create({
+  // Other styles
+
+  friendCardContainer: {
+    padding: 10,
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderRadius: 8,
+    backgroundColor: 'white',
+    elevation: 3,
+  },
+  friendCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    backgroundColor: 'blue', // Change color or replace with image
+    padding: 5,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  emailContainer: {
+    flex: 1,
+  },
+  friendEmail: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    // Other styles for email or name
+  },
+  // Add more styles as needed
+});
 function ContactsScreen() {
   const {currentUserId} = useContext(UserIdContext);
   const navigation = useNavigation();
@@ -37,6 +71,7 @@ function ContactsScreen() {
           const data = friends.map(friend => ({
             id: friend.uid, // Assuming the friend object in the 'friends' array contains 'uid' field
             email: friend.email, // Assuming the friend object in the 'friends' array contains 'email' field
+            
           }));
   
           setFriendData(data);
@@ -53,14 +88,19 @@ function ContactsScreen() {
     }
   }, [currentUserId]);
 
-  const renderFriendCard = ({item}) => (
+  const renderFriendCard = ({ item }) => (
     <TouchableOpacity
-      style={styles.friendCard}
+      style={styles2.friendCardContainer}
       onPress={() => handleFriendClick(item.id)}>
-      <View>
-        {/* profile picture*/}
-        <Text>{item.email}</Text>
-        {/* Add name here */}
+      <View style={styles2.friendCard}>
+        <View style={styles2.iconContainer}>
+          {/* Add your friend icon */}
+          <Icon name="gear" size={20} color="white" />
+        </View>
+        <View style={styles2.emailContainer}>
+          <Text style={styles2.friendEmail}>{item.email}</Text>
+          {/* Add additional styling or content here */}
+        </View>
       </View>
     </TouchableOpacity>
   );
