@@ -127,8 +127,12 @@ function SubGroup({route, navigation}) {
       }
     };
 
-    fetchPaymentsData();
+    if (groupID) {
+      fetchPaymentsData(); // Fetch initially when groupID changes
+     
+    }
   }, [groupID]);
+
 
   return (
     <View>
