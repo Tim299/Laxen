@@ -5,7 +5,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import subGroup from './subgroup';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
-import {addDoc, collection, onSnapshot} from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+} from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
@@ -242,21 +248,71 @@ const GroupCard = ({title, amount, description, members, icon, onPress}) => (
   </TouchableOpacity>
 );
 
+async function fetchMemberNames(members) {
+  let memberNames = [];
+  let memberIDs = [];
+
+  for (let i = 0; i < members.length; i++) {
+    memberIDs.push(members[i].id);
+  }
+
+  try {
+    const groupRef = collection(FIREBASE_DB, 'users');
+    const querySnapshot = await getDocs(
+      query(groupRef, where('id', 'in', memberIDs)),
+    );
+    querySnapshot.forEach(doc => {
+      const member = doc.data();
+      memberNames.push(member.username);
+    });
+
+    return memberNames;
+  } catch (error) {
+    console.error('Error fetching member names:', error);
+    return [];
+  }
+}
+
 function GroupCards() {
   const navigation = useNavigation();
   const [groups, setGroups] = useState([]);
 
-  useEffect(() => {
-    const groupsCollection = collection(FIREBASE_DB, 'Group');
-    const unsubscribe = onSnapshot(groupsCollection, snapshot => {
-      const groupsData = snapshot.docs.map(doc => ({
-        ...doc.data(),
-        id: doc.title,
-      }));
-      setGroups(groupsData);
-    });
+  // useEffect(() => {
+  //   const groupsCollection = collection(FIREBASE_DB, 'Group');
+  //   const unsubscribe = onSnapshot(groupsCollection, snapshot => {
+  //     const groupsData = snapshot.docs.map(doc => ({
+  //       ...doc.data(),
+  //       id: doc.title,
+  //     }));
+  //     setGroups(groupsData);
+  //   });
 
-    return () => unsubscribe();
+  //   return () => unsubscribe();
+  // }, []);
+
+  useEffect(() => {
+    const fetchGroupData = async () => {
+      try {
+        const groupsCollection = collection(FIREBASE_DB, 'Group');
+        const unsubscribe = onSnapshot(groupsCollection, snapshot => {
+          const groupsData = snapshot.docs.map(async doc => {
+            const groupData = doc.data();
+            const memberObjects = await fetchMemberNames(groupData.members);
+            const updatedGroupData = {...groupData, memberObjects};
+            return updatedGroupData;
+          });
+          Promise.all(groupsData).then(resolvedGroupsData => {
+            setGroups(resolvedGroupsData);
+          });
+        });
+
+        return () => unsubscribe();
+      } catch (error) {
+        console.error('Error fetching group data:', error);
+      }
+    };
+
+    fetchGroupData();
   }, []);
 
   return (
@@ -269,10 +325,10 @@ function GroupCards() {
             amount={item.amount}
             description={item.description}
             icon={item.icon}
+            members={item.memberObjects}
             onPress={() => {
               navigation.navigate('subgroup', {
                 groupID: item.title,
-            
               });
             }}
           />

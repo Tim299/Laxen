@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Button} from '@rneui/themed';
 import {Tooltip} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
+import {collection, query, where, getDocs} from 'firebase/firestore';
+import {FIREBASE_DB} from '../../../../FirebaseConfig';
 
 const styles = StyleSheet.create({
   feedContainer: {
@@ -186,7 +188,6 @@ function Member({member}) {
   if (member.indexOf(' ') > 0) {
     secondInitial = member[member.indexOf(' ') + 1];
   }
-
   return (
     <View style={styles.memberIcon}>
       <Text style={styles.memberIconText}>
@@ -212,11 +213,6 @@ const Payment = ({
 }) => {
   const [isPaymentClicked, setIsPaymentClicked] = useState(false);
   const [tooltipVisible, setTooltipVisible] = useState(false);
-
-  //   console.log(paymentMembers, 'paymentMembers');
-  //   console.log(groupID, 'groupID');
-  //   console.log(paymentID, 'paymentID');
-  //   console.log(isPayed, 'isPayed');
 
   const handlePaymentClick = () => {
     setIsPaymentClicked(true);
@@ -292,26 +288,67 @@ const Payment = ({
   );
 };
 
+async function fetchMemberNames(members) {
+  let memberNames = [];
+  let memberIDs = [];
+
+  for (let i = 0; i < members.length; i++) {
+    memberIDs.push(members[i].id);
+  }
+
+  try {
+    const groupRef = collection(FIREBASE_DB, 'users');
+    const querySnapshot = await getDocs(
+      query(groupRef, where('id', 'in', memberIDs)),
+    );
+
+    querySnapshot.forEach(doc => {
+      const member = doc.data();
+      memberNames.push(member.username);
+    });
+
+    return memberNames;
+  } catch (error) {
+    console.error('Error fetching member names:', error);
+    return [];
+  }
+}
+
 function PaymentFeed({payments, groupID, members, isPayed, paymentID}) {
   const navigation = useNavigation();
+  const [memberNames, setMemberNames] = useState([]);
+
+  useEffect(() => {
+    const fetchNames = async () => {
+      const names = await Promise.all(
+        payments.map(async item => {
+          const names = await fetchMemberNames(item.members);
+          return {...item, memberNames: names};
+        }),
+      );
+      setMemberNames(names);
+    };
+
+    fetchNames();
+  }, [payments]);
 
   return (
     <View style={styles.feedContainer}>
       <FlatList
-        data={payments}
+        data={memberNames}
         renderItem={({item}) => (
           <Payment
             title={item.title}
             amount={item.amount}
             date={convertDate(item.date)}
-            creator={item.creator}
-            deschribtion={item.deschribtion}
-            members={item.members}
+            creator={item.memberNames[0]}
+            deschribtion={item.description}
+            members={item.memberNames}
             icon={item.icon}
-            groupID={groupID}
-            isPayed={isPayed}
-            paymentID={paymentID}
-            paymentMembers={members}
+            // groupID={groupID}
+            // isPayed={isPayed}
+            // paymentID={paymentID}
+            // paymentMembers={members}
           />
         )}
         keyExtractor={item => item.id}

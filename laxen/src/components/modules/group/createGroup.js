@@ -128,7 +128,7 @@ function CreateGroup({route}) {
     {key: '2', value: 'Resor'},
   ];
 
-  console.log(currentUserId, 'from form');
+  // console.log(currentUserId, 'from form');
 
   useEffect(() => {
     const fetchFriendData = async () => {
@@ -174,6 +174,16 @@ function CreateGroup({route}) {
     }
   }, [currentUserId]);
 
+  function getIcon() {
+    if (selectedIcon === 'Fisk') {
+      return 'fish-outline';
+    } else if (selectedIcon === 'Resor') {
+      return 'airplane-outline';
+    } else {
+      return 'people-outline';
+    }
+  }
+
   const createGroupInDB = async () => {
     try {
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Group'));
@@ -183,6 +193,7 @@ function CreateGroup({route}) {
         title,
         amount: 0,
         description,
+        icon: getIcon(),
         members: [
           // Include current user ID and email in the members array
           {id: currentUserId, email: currentUserEmail},
@@ -192,12 +203,8 @@ function CreateGroup({route}) {
         id: (currentHighestID + 1).toString(),
       };
 
-      console.log('New group data:', newGroup);
-
       const docRef = doc(collection(FIREBASE_DB, 'Group'), newGroup.id);
       await setDoc(docRef, newGroup);
-
-      console.log(`Group added with ID ${newGroup.id}`);
 
       navigation.navigate('subgroup', newGroup);
     } catch (error) {
@@ -221,6 +228,7 @@ function CreateGroup({route}) {
         placeholder="Titel"
         style={styles.input}
         onChangeText={input => setTitle(input)}
+        maxLength={25}
       />
       <TextInput
         placeholder="Beskrivning"

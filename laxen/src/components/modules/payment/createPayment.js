@@ -1,29 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { Text, TextInput, View, TouchableOpacity, Alert } from "react-native";
-import { StyleSheet } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, TextInput, View, TouchableOpacity, Alert} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
-import { collection, doc, setDoc, getDocs, onSnapshot } from 'firebase/firestore';
-import { FIREBASE_DB } from '../../../../FirebaseConfig';
-import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list';
+import {useNavigation} from '@react-navigation/native';
+import {collection, doc, setDoc, getDocs, onSnapshot} from 'firebase/firestore';
+import {FIREBASE_DB} from '../../../../FirebaseConfig';
+import {
+  SelectList,
+  MultipleSelectList,
+} from 'react-native-dropdown-select-list';
 import * as colors from '../../modules/colors/colors';
 
 const styles = StyleSheet.create({
   closeIcon: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginTop: 20,
     marginRight: 20,
   },
   GroupFormContainer: {
     backgroundColor: colors.neutral,
-    height: "100%",
+    height: '100%',
   },
   createGroupText: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 26,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 10,
-    color: colors.grey
+    color: colors.grey,
   },
   input: {
     height: 50,
@@ -39,8 +42,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
-    marginHorizontal: "10%",
-    marginTop: "10%",
+    marginHorizontal: '10%',
+    marginTop: '10%',
     borderRadius: 10,
     elevation: 10,
     backgroundColor: colors.primary,
@@ -97,88 +100,102 @@ function CreatePaymentForm({route}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  const [date, setDate] = useState('');
+  // const [date, setDate] = useState('');
   const [creator, setCreator] = useState('');
   const [selectedMember, setSelectedMember] = useState([]);
-  const [selectedIcon, setSelectedIcon] = useState("");
-  const {
-    groupID,
- 
-  } = route.params;
+  const [selectedIcon, setSelectedIcon] = useState('');
+  const {groupID} = route.params;
   // temporary solution before integrated with subgroups
   const [selectedGroup, setSelectedGroup] = useState('');
   const [groups, setGroups] = useState([]);
   useEffect(() => {
     const groupsCollection = collection(FIREBASE_DB, 'groups');
-    const unsubscribe = onSnapshot(groupsCollection, (snapshot) => {
-      const groupsData = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    const unsubscribe = onSnapshot(groupsCollection, snapshot => {
+      const groupsData = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
 
       let groupTitles = [];
       for (let i = 0; i < groupsData.length; i++) {
-        if(groupsData[i].title != undefined) {
-            groupTitles.push({
-                key: i.toString(),
-                value: groupsData[i].title
-            });
+        if (groupsData[i].title != undefined) {
+          groupTitles.push({
+            key: i.toString(),
+            value: groupsData[i].title,
+          });
         }
       }
-      console.log(groupTitles);
       setGroups(groupTitles);
     });
 
     return () => unsubscribe();
-
   }, []);
 
   // custom function to only allow numbers as input
-  const inputNumber = (input) => {
+  const inputNumber = input => {
     for (let i = 0; i < input.length; i++) {
-        if (isNaN(parseInt(input[i]))) {
-            alert("Endast siffror är tillåtna!");
-            input = input.slice(0, input.length - 1);
-        }
+      if (isNaN(parseInt(input[i]))) {
+        alert('Endast siffror är tillåtna!');
+        input = input.slice(0, input.length - 1);
+      }
     }
     setAmount(input);
-  }
-  
+  };
+
   const contacts = [
     // Get contacts from database to display as members to add to group here
 
     // This is sample data
-    { key: '1', value: 'Hampus Grimskär'},
-    { key: '2', value: 'Ludvig Nilsson'},
-  ]
+    {key: '1', value: 'Hampus Grimskär'},
+    {key: '2', value: 'Ludvig Nilsson'},
+  ];
 
   const categories = [
-    { key: '1', value: 'Fisk'},
-    { key: '2', value: 'Resor'},
-  ]
+    {key: '1', value: 'Fisk'},
+    {key: '2', value: 'Resor'},
+  ];
+
+  const getIcon = () => {
+    switch (selectedIcon) {
+      case 'Fisk':
+        return 'fish-outline';
+      case 'Resor':
+        return 'airplane-outline';
+      default:
+        return 'cash-outline';
+    }
+  };
 
   const createPayment = async () => {
     try {
       // Fetch the current highest groupID
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'payments'));
       const currentHighestID = querySnapshot.size;
-  
+
       // Extract values from selectedMember or set it to an empty array if undefined
-  
+
       const newPayment = {
         title,
         description,
         amount: parseInt(amount),
         members: selectedMember,
-        id: (currentHighestID + 1).toString(), 
+        id: (currentHighestID + 1).toString(),
         group: groupID,
+        date: new Date()
+          .toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })
+          .split('/')
+          .join('-'),
+        icon: getIcon(),
       };
-  
-      console.log('New payment data:', newPayment);
-  
+
       // Add the new group to the 'tasks' collection
       const docRef = doc(collection(FIREBASE_DB, 'payments'), newPayment.id);
       await setDoc(docRef, newPayment);
-  
-      console.log(`Payment added with ID ${newPayment.id}`);
-  
+
       navigation.navigate('subgroup', selectedGroup);
     } catch (error) {
       console.error('Error creating payment: ', error);
@@ -197,10 +214,11 @@ function CreatePaymentForm({route}) {
         style={styles.closeIcon}
       />
       <Text style={styles.createGroupText}>Skapa en ny betalning</Text>
-      <TextInput 
+      <TextInput
         placeholder="Titel"
         style={styles.input}
         onChangeText={input => setTitle(input)}
+        maxLength={12}
       />
       <TextInput
         placeholder="Beskrivning"
@@ -208,14 +226,14 @@ function CreatePaymentForm({route}) {
         onChangeText={input => setDescription(input)}
       />
       <TextInput
-        placeholder='summa'
+        placeholder="summa"
         value={amount}
         style={styles.input}
-        keyboardType='numeric'
+        keyboardType="numeric"
         onChangeText={input => inputNumber(input)}
       />
       <SelectList
-        setSelected={(val) => setSelectedIcon(val)}
+        setSelected={val => setSelectedIcon(val)}
         data={categories}
         save="value"
         label="Kategorier"
@@ -226,7 +244,7 @@ function CreatePaymentForm({route}) {
       />
 
       <MultipleSelectList
-        setSelected={(val) => setSelectedMember(val)}
+        setSelected={val => setSelectedMember(val)}
         data={contacts}
         save="value"
         placeholder="Välj Medlemmar"
@@ -237,7 +255,7 @@ function CreatePaymentForm({route}) {
       />
 
       <SelectList
-        setSelected={(val) => setSelectedGroup(val)}
+        setSelected={val => setSelectedGroup(val)}
         data={groups}
         save="value"
         label="Grupper"
@@ -248,8 +266,7 @@ function CreatePaymentForm({route}) {
       />
       <TouchableOpacity
         style={styles.createGroupButton}
-        onPress={createPayment}
-      >
+        onPress={createPayment}>
         <Text style={styles.createGroupButtonText}>Skapa Betalning</Text>
       </TouchableOpacity>
     </View>

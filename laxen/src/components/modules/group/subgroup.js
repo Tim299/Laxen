@@ -1,11 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import {Text, View, StyleSheet, FlatList, TouchableOpacity,Alert} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import * as colors from '../colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import PaymentFeed from '../payment/payment';
-import {addDoc, collection, onSnapshot,getDocs,query,where} from 'firebase/firestore';
-import { FIREBASE_DB } from '../../../../FirebaseConfig';
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
+import {FIREBASE_DB} from '../../../../FirebaseConfig';
 
 const styles = StyleSheet.create({
   subgroupViewContainer: {
@@ -87,31 +101,25 @@ function SubGroup({route, navigation}) {
     paymentID,
   } = route.params;
 
-  const [paymentData, setPaymentData] = useState("");
+  const [paymentData, setPaymentData] = useState([]);
 
-  console.log(groupID)
   useEffect(() => {
-
     const fetchPaymentsData = async () => {
       try {
         const paymentsRef = collection(FIREBASE_DB, 'payments');
-    
+
         // Query payments where 'group' field matches the selected group ID
-        const querySnapshot = await getDocs(query(paymentsRef, where('group', '==', "timtest")));
-    
-        const payments = [];
-        querySnapshot.forEach(doc => {
-          const payment = doc.data();
-          payments.push({
-            title: payment.title,
-            description: payment.description,
-            amount: payment.amount,
-            members: payment.members
-            // Add other fields as needed
-          });
-        });
-        setPaymentData(payments)
-        console.log('Payments for selected group:', payments);
+        const querySnapshot = await getDocs(
+          query(paymentsRef, where('group', '==', groupID)),
+        );
+
+        const payments = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setPaymentData(payments);
+
         return payments;
       } catch (error) {
         console.error('Error searching payments by group:', error);
@@ -119,17 +127,15 @@ function SubGroup({route, navigation}) {
       }
     };
 
-  fetchPaymentsData();
-
+    fetchPaymentsData();
   }, [groupID]);
-
 
   return (
     <View>
       <View style={styles.subgroupViewContainer}>
         <View style={styles.headerContainer}>
           <Text h1 style={styles.headerFont}>
-            {title}
+            {groupID}
           </Text>
 
           <View style={{backgroundColor: colors.lightgrey, borderRadius: 50}}>
@@ -145,12 +151,11 @@ function SubGroup({route, navigation}) {
         </View>
 
         <PaymentFeed
-          payments={  console.log(paymentData,"should not be undefined")
-            |paymentData}
+          payments={paymentData}
           groupID={groupID}
           members={members}
-          isPayed={isPayed}
-          paymentID={paymentID}
+          // isPayed={isPayed}
+          // paymentID={paymentID}
         />
       </View>
       <TouchableOpacity
