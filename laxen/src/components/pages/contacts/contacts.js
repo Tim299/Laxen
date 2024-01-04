@@ -12,7 +12,42 @@ import {collection, doc, getDoc, query, where} from 'firebase/firestore';
 import {UserIdContext} from '../../../App';
 import {styles} from './contacts_stylesheet';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
+import Icon from 'react-native-vector-icons/Ionicons';
+import * as colors from '../../modules/colors/colors';
+import {StyleSheet} from 'react-native';
+import Icon2 from 'react-native-vector-icons/FontAwesome'; // Or replace with your chosen icon library
 
+const styles2 = StyleSheet.create({
+  // Other styles
+
+  friendCardContainer: {
+    padding: 10,
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderRadius: 8,
+    backgroundColor: 'white',
+    elevation: 3,
+  },
+  friendCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    backgroundColor: 'blue', // Change color or replace with image
+    padding: 5,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  emailContainer: {
+    flex: 1,
+  },
+  friendEmail: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    // Other styles for email or name
+  },
+  // Add more styles as needed
+});
 function ContactsScreen() {
   const {currentUserId} = useContext(UserIdContext);
   const navigation = useNavigation();
@@ -23,22 +58,21 @@ function ContactsScreen() {
   };
 
   useEffect(() => {
-    
     const fetchFriendData = async () => {
       try {
         const usersRef = collection(FIREBASE_DB, 'users');
         const currentUserRef = doc(usersRef, currentUserId);
-  
+
         const currentUserDoc = await getDoc(currentUserRef);
         if (currentUserDoc.exists()) {
           const friends = currentUserDoc.data().friends || [];
-  
+
           // Directly map the friends array to select 'uid' and 'email' fields
           const data = friends.map(friend => ({
             id: friend.uid, // Assuming the friend object in the 'friends' array contains 'uid' field
             email: friend.email, // Assuming the friend object in the 'friends' array contains 'email' field
           }));
-  
+
           setFriendData(data);
         } else {
           Alert.alert('Current user document does not exist.');
@@ -55,12 +89,17 @@ function ContactsScreen() {
 
   const renderFriendCard = ({item}) => (
     <TouchableOpacity
-      style={styles.friendCard}
+      style={styles2.friendCardContainer}
       onPress={() => handleFriendClick(item.id)}>
-      <View>
-        {/* profile picture*/}
-        <Text>{item.email}</Text>
-        {/* Add name here */}
+      <View style={styles2.friendCard}>
+        <View style={styles2.iconContainer}>
+          {/* Add your friend icon */}
+          <Icon2 name="gear" size={20} color="white" />
+        </View>
+        <View style={styles2.emailContainer}>
+          <Text style={styles2.friendEmail}>{item.email}</Text>
+          {/* Add additional styling or content here */}
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -75,18 +114,36 @@ function ContactsScreen() {
         </Text>
         <Image source={require('../login/fish.png')} style={styles.logo} />
       </View>
-      <View>
+      <View
+        style={{
+          justifyContent: 'left',
+          alignItems: 'left',
+          marginTop: '-97%',
+        }}>
+        <FlatList
+          data={friendData}
+          keyExtractor={item => item.id}
+          renderItem={renderFriendCard}
+        />
+      </View>
+      <View style={{marginTop: '-10%'}}>
         <TouchableOpacity
           onPress={handleCreateContact}
           style={styles.createContactButton}>
-          <Text style={styles.createContactButtonText}>Lägg till</Text>
+          <Icon
+            name="accessibility"
+            size={30}
+            color={colors.black}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignContent: 'center',
+              alignSelf: 'center',
+              marginTop: '20%',
+            }}
+          />
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={friendData}
-        keyExtractor={item => item.id}
-        renderItem={renderFriendCard}
-      />
     </View>
   );
 }

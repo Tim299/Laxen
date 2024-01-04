@@ -50,7 +50,18 @@ function GroupsScreen() {
         <TouchableOpacity
           onPress={handleCreateGroup}
           style={styles.createGroupIcon}>
-          <Icon name="add-outline" size={60} color={colors.black} />
+          <Icon
+            name="people"
+            size={30}
+            color={colors.black}
+            style={{
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignItems: 'center',
+              alignSelf: 'center',
+              marginTop: 12,
+            }}
+          />
         </TouchableOpacity>
       </View>
     </View>
