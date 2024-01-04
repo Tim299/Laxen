@@ -190,6 +190,7 @@ function CreateGroup({route}) {
           {id: currentUserId, email: currentUserEmail},
           ...rawFriendData,
         ],
+        userIds: newUserIds,
         id: (currentHighestID + 1).toString(),
       };
 
