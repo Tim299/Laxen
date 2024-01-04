@@ -256,6 +256,8 @@ async function fetchMemberNames(members) {
     memberIDs.push(members[i].id);
   }
 
+
+
   try {
     const groupRef = collection(FIREBASE_DB, 'users');
     const querySnapshot = await getDocs(
@@ -265,6 +267,9 @@ async function fetchMemberNames(members) {
       const member = doc.data();
       memberNames.push(member.username);
     });
+
+
+
 
     return memberNames;
   } catch (error) {
@@ -277,6 +282,9 @@ function GroupCards({userid}) {
   const navigation = useNavigation();
   const [groups, setGroups] = useState([]);
 
+
+
+
   // useEffect(() => {
   //   const groupsCollection = collection(FIREBASE_DB, 'Group');
   //   const unsubscribe = onSnapshot(groupsCollection, snapshot => {
@@ -287,6 +295,10 @@ function GroupCards({userid}) {
   //     setGroups(groupsData);
   //   });
   // }, []);
+
+
+
+
 
   // useEffect(() => {
   //   const groupsCollection = collection(FIREBASE_DB, 'Group');
@@ -305,6 +317,9 @@ function GroupCards({userid}) {
 
   //   return () => unsubscribe();
   // }, []);
+
+
+
 
   // useEffect(() => {
   //   const fetchGroupData = async () => {
@@ -331,7 +346,7 @@ function GroupCards({userid}) {
   //   fetchGroupData();
   // }, []);
 
-  useEffect(() => {
+  useEffect(() => { //vfddf
     const fetchGroupData = async () => {
       try {
         const groupsCollection = collection(FIREBASE_DB, 'Group');
@@ -346,7 +361,7 @@ function GroupCards({userid}) {
               );
               const updatedGroupData = {...groupData, memberObjects};
               return updatedGroupData;
-            });
+            }); //gdrf
             Promise.all(groupsData).then(resolvedGroupsData => {
               setGroups(resolvedGroupsData);
             });
@@ -362,7 +377,11 @@ function GroupCards({userid}) {
     fetchGroupData();
   }, []);
 
+
+
   return (
+
+    
     <View style={styles.container}>
       <FlatList
         data={groups} //ändra till db fetch
