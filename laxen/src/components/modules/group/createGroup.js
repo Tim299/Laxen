@@ -188,18 +188,20 @@ function CreateGroup({route}) {
     try {
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Group'));
       const currentHighestID = querySnapshot.size;
-
+      const newUserIds = [
+        currentUserId, // Include current user ID in the user IDs array
+        ...rawFriendData.map(friend => friend.id), // Include other friend IDs
+      ];
       const newGroup = {
         title,
         amount: 0,
         description,
         icon: getIcon(),
         members: [
-          // Include current user ID and email in the members array
           {id: currentUserId, email: currentUserEmail},
-          // Include other friends fetched from rawFriendData
           ...rawFriendData,
         ],
+        userIds: newUserIds,
         id: (currentHighestID + 1).toString(),
       };
 
@@ -207,9 +209,7 @@ function CreateGroup({route}) {
       await setDoc(docRef, newGroup);
 
       navigation.navigate('subgroup', newGroup);
-    } catch (error) {
-      console.error('Error creating group: ', error);
-    }
+    } catch (error) {}
   };
 
   return (

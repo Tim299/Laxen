@@ -3,13 +3,21 @@ import {Text, TextInput, View, TouchableOpacity, Alert} from 'react-native';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-import {collection, doc, setDoc, getDocs, onSnapshot} from 'firebase/firestore';
-import {FIREBASE_DB} from '../../../../FirebaseConfig';
+import {
+  collection,
+  doc,
+  setDoc,
+  getDocs,
+  onSnapshot,
+  getDoc,
+} from 'firebase/firestore';
+import {FIREBASE_DB, FIREBASE_AUTH} from '../../../../FirebaseConfig';
 import {
   SelectList,
   MultipleSelectList,
 } from 'react-native-dropdown-select-list';
 import * as colors from '../../modules/colors/colors';
+import {getAuth, onAuthStateChanged} from 'firebase/auth';
 
 const styles = StyleSheet.create({
   closeIcon: {
@@ -108,6 +116,11 @@ function CreatePaymentForm({route}) {
   // temporary solution before integrated with subgroups
   const [selectedGroup, setSelectedGroup] = useState('');
   const [groups, setGroups] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [friendData, setFriendData] = useState([]);
+  const [rawFriendData, setRawFriendData] = useState([]);
+  const [currentUserEmail, setCurrentUserEmail] = useState('');
+
   useEffect(() => {
     const groupsCollection = collection(FIREBASE_DB, 'groups');
     const unsubscribe = onSnapshot(groupsCollection, snapshot => {
@@ -130,6 +143,51 @@ function CreatePaymentForm({route}) {
 
     return () => unsubscribe();
   }, []);
+  useEffect(() => {
+    const fetchFriendData = async () => {
+      try {
+        const usersRef = collection(FIREBASE_DB, 'users');
+        const currentUserRef = doc(usersRef, currentUserId);
+
+        const currentUserDoc = await getDoc(currentUserRef);
+        if (currentUserDoc.exists()) {
+          const friends = currentUserDoc.data().friends || [];
+
+          const data = friends.map(friend => ({
+            key: friend.uid,
+            value: friend.email,
+          }));
+
+          const rawData = friends.map(friend => ({
+            id: friend.uid,
+            email: friend.email,
+          }));
+          setRawFriendData(rawData);
+          setFriendData(data);
+        } else {
+          Alert.alert('Current user document does not exist.');
+        }
+      } catch (error) {
+        console.error('Error fetching friend data:', error);
+        Alert.alert('Error fetching friend data.');
+      }
+    };
+
+    const auth = FIREBASE_AUTH;
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        const email = user.email;
+        setCurrentUserEmail(email);
+        const uid = user.uid;
+        setCurrentUserId(uid);
+      } else {
+      }
+    });
+
+    if (currentUserId) {
+      fetchFriendData();
+    }
+  }, [currentUserId]);
 
   // custom function to only allow numbers as input
   const inputNumber = input => {
@@ -178,7 +236,10 @@ function CreatePaymentForm({route}) {
         title,
         description,
         amount: parseInt(amount),
-        members: selectedMember,
+        members: [
+          {id: currentUserId, email: currentUserEmail},
+          ...rawFriendData,
+        ],
         id: (currentHighestID + 1).toString(),
         group: groupID,
         date: new Date()
@@ -195,6 +256,8 @@ function CreatePaymentForm({route}) {
       // Add the new group to the 'tasks' collection
       const docRef = doc(collection(FIREBASE_DB, 'payments'), newPayment.id);
       await setDoc(docRef, newPayment);
+
+      console.log(`Payment added with ID ${newPayment.id}`);
 
       navigation.navigate('subgroup', selectedGroup);
     } catch (error) {
@@ -245,7 +308,7 @@ function CreatePaymentForm({route}) {
 
       <MultipleSelectList
         setSelected={val => setSelectedMember(val)}
-        data={contacts}
+        data={friendData}
         save="value"
         placeholder="Välj Medlemmar"
         searchPlaceholder="Sök i kontakter"

@@ -273,7 +273,7 @@ async function fetchMemberNames(members) {
   }
 }
 
-function GroupCards() {
+function GroupCards({userid}) {
   const navigation = useNavigation();
   const [groups, setGroups] = useState([]);
 
@@ -286,25 +286,72 @@ function GroupCards() {
   //     }));
   //     setGroups(groupsData);
   //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   const groupsCollection = collection(FIREBASE_DB, 'Group');
+  //   const queryByUserId = query(
+  //     groupsCollection,
+  //     where('userIds', 'array-contains', userid),
+  //   );
+
+  //   const unsubscribe = onSnapshot(queryByUserId, snapshot => {
+  //     const groupsData = snapshot.docs.map(doc => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     }));
+  //     setGroups(groupsData);
+  //   });
 
   //   return () => unsubscribe();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchGroupData = async () => {
+  //     try {
+  //       const groupsCollection = collection(FIREBASE_DB, 'Group');
+  //       const unsubscribe = onSnapshot(groupsCollection, snapshot => {
+  //         const groupsData = snapshot.docs.map(async doc => {
+  //           const groupData = doc.data();
+  //           const memberObjects = await fetchMemberNames(groupData.members);
+  //           const updatedGroupData = {...groupData, memberObjects};
+  //           return updatedGroupData;
+  //         });
+  //         Promise.all(groupsData).then(resolvedGroupsData => {
+  //           setGroups(resolvedGroupsData);
+  //         });
+  //       });
+
+  //       return () => unsubscribe();
+  //     } catch (error) {
+  //       console.error('Error fetching group data:', error);
+  //     }
+  //   };
+
+  //   fetchGroupData();
   // }, []);
 
   useEffect(() => {
     const fetchGroupData = async () => {
       try {
         const groupsCollection = collection(FIREBASE_DB, 'Group');
-        const unsubscribe = onSnapshot(groupsCollection, snapshot => {
-          const groupsData = snapshot.docs.map(async doc => {
-            const groupData = doc.data();
-            const memberObjects = await fetchMemberNames(groupData.members);
-            const updatedGroupData = {...groupData, memberObjects};
-            return updatedGroupData;
-          });
-          Promise.all(groupsData).then(resolvedGroupsData => {
-            setGroups(resolvedGroupsData);
-          });
-        });
+        const unsubscribe = onSnapshot(
+          query(groupsCollection, where('userIds', 'array-contains', userid)),
+          snapshot => {
+            const groupsData = snapshot.docs.map(async doc => {
+              const groupData = doc.data();
+              const memberObjects = await fetchMemberNames(
+                groupData.members,
+                userid,
+              );
+              const updatedGroupData = {...groupData, memberObjects};
+              return updatedGroupData;
+            });
+            Promise.all(groupsData).then(resolvedGroupsData => {
+              setGroups(resolvedGroupsData);
+            });
+          },
+        );
 
         return () => unsubscribe();
       } catch (error) {

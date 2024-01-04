@@ -7,6 +7,7 @@ import {Tooltip} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {collection, query, where, getDocs} from 'firebase/firestore';
 import {FIREBASE_DB} from '../../../../FirebaseConfig';
+import openSwish from '../swish/swish';
 
 const styles = StyleSheet.create({
   feedContainer: {
@@ -217,11 +218,23 @@ const Payment = ({
   const handlePaymentClick = () => {
     setIsPaymentClicked(true);
 
-    //lägg swisch här
+    const payload = {
+      version: 1,
+      payee: {
+        // need to get this from database
+        value: '+46701111111',
+      },
+      amount: {
+        value: (amount / members.length).toFixed(1),
+      },
+      message: {
+        value: deschribtion,
+        editable: false,
+      },
+    };
 
-    // setTimeout(() => {
-    //   setIsPaymentClicked(false);
-    // }, 2000);
+    //lägg swisch här
+    openSwish(payload);
   };
 
   return (
